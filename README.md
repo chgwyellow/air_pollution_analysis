@@ -10,8 +10,7 @@
 - data/
   - raw/          # original CSV
   - processed/    # cleaned/derived files
-- notebooks/      # checks (e.g., data_check.ipynb)
-- src/            # data processing and scripts
+- notebooks/      # checks and ETL (e.g., data_check.ipynb)
 - README.md
 
 ## Field summary (selected)
