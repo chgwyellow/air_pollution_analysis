@@ -1,36 +1,54 @@
-# This analytic project focuses on air pollution in Taiwan.
+# Taiwan Air Pollution Analysis
 
-Use the dataset from Kaggle to analyze air pollution in Taiwan.  
-[Here is the link](https://www.kaggle.com/datasets/taweilo/taiwan-air-quality-data-20162024/code?utm_source=chatgpt.com) 
+One-line: Data cleaning, EDA and visualization on the Taiwan air quality dataset (Kaggle, 2016–2024).
 
-1. Download the air_quality.csv and store it to data/raw  
+## Data source
+- Dataset: "Taiwan Air Quality Data (2016-2024)" from Kaggle.  
+- Place the downloaded CSV at: `data/raw/air_quality.csv`.
 
-Below is the description of the column in the original dataset.
-----------------------------------------------  
-**Column      | Description**  
-date        | Date and time of the reading  
-sitename    | Station name  
-county      | County or city  
-aqi         | Air Quality Index  
-pollutant   | Main pollutant  
-status      | Status of air quality  
-so2         | Sulfur Dioxide in ppb  
-co          | Carbon Monoxide in ppm  
-o3          | Ozone in ppb  
-o3_8hr      | 8-hour average of Ozone  
-pm10        | Particulate matter under 10μm  
-pm2.5       | Particulate matter under 2.5μm  
-no2         | Nitrogen Dioxide in ppb  
-nox         | Nitrogen Oxides in ppb  
-no          | Nitric Oxide in ppb  
-windspeed   | Wind speed in m/sec  
-winddirec   | Wind direction in degrees  
-unit        | Unit of measurement  
-co_8hr      | 8-hour average of CO  
-pm2.5_avg   | Moving average of PM2.5  
-pm10_avg    | Moving average of PM10  
-so2_avg     | Moving average of SO2  
-longitude   | Longitude of the site  
-latitude    | Latitude of the site  
-siteid      | Station ID  
-------------------------------------------------  
+## Project layout
+- data/
+  - raw/          # original CSV
+  - processed/    # cleaned/derived files
+- notebooks/      # checks (e.g., data_check.ipynb)
+- src/            # data processing and scripts
+- README.md
+
+## Field summary (selected)
+- date: date and time  
+- sitename: station name  
+- county: county / city  
+- aqi: air quality index  
+- pollutant: main pollutant  
+- status: status description  
+- so2, co, o3, o3_8hr, pm10, pm2.5, no2, nox, no: pollutant concentrations  
+- windspeed, winddirec, longitude, latitude, siteid
+
+## Data quality & preprocessing recommendations
+- Convert pollutant columns to numeric, coercing errors to NaN:
+  ```
+  ```python
+  cols = ["so2","co","o3","o3_8hr","pm10","pm2.5","no2"]
+  df[cols] = df[cols].apply(pd.to_numeric, errors="coerce")
+  ```
+  ```
+- Check missing values by column:
+  ```
+  ```python
+  df.isna().sum()
+  ```
+  ```
+- Detect special non-numeric flags (e.g. "-") before/after conversion:
+  ```
+  ```python
+  mask = df['so2'].astype(str).str.strip() == '-'
+  df[mask]
+  ```
+  ```
+- Get unique non-null values of a column (exclude empty/"-"):
+  ```
+  ```python
+  unique_vals = df['county'].dropna().astype(str).str.strip().unique().tolist()
+  unique_vals = [v for v in unique_vals if v not in ("", "-")]
+  ```
+  ```
