@@ -1,6 +1,7 @@
 import pandas as pd
 from colorama import Fore
 from pathlib import Path
+from config import PROCESSED_DIR
 
 
 # === 1. 通用 CSV 讀取 ===
@@ -27,17 +28,15 @@ def open_csv(path: str) -> pd.DataFrame:
 
 
 # === 2. 單一 CSV 儲存 ===
-def save_csv_no_index(df: pd.DataFrame, filename: str | Path) -> None:
+def save_csv_no_index(df: pd.DataFrame, filename: str) -> None:
     """Save the DataFrame object to csv file without the index"""
-    output_dir = Path("data/processed")
-    output_dir.mkdir(parents=True, exist_ok=True)
 
     # 替檔名加上suffix
     filename = Path(filename)
     if filename.suffix != ".csv":
         filename = filename.with_suffix(".csv")
 
-    save_path = output_dir / filename.name
+    save_path = PROCESSED_DIR / filename.name
 
     try:
         df.to_csv(save_path, index=False)

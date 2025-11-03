@@ -1,16 +1,20 @@
 from src.cleaning.data_cleaning import clean_air_quality
 from src.utils.IO_file import open_csv, save_multi_csv_no_index
 from colorama import Fore
-from pathlib import Path
+from config import RAW_DIR, PROCESSED_DIR
 
 city = "Kaohsiung_City/"
-RAW_PATH = Path("data/raw")
-TARGET_PATH = Path("data/processed") / f"{city}.csv"
+TARGET_PATH = PROCESSED_DIR / f"{city}.csv"
 
 
 if __name__ == "__main__":
     if not TARGET_PATH.exists():
-        df = open_csv(RAW_PATH / "air_quality.csv")
+        try:
+            df = open_csv(RAW_DIR / "air_quality.csv")
+        except FileNotFoundError:
+            print(Fore.RED + "❌ Raw data not found. Please check RAW_DIR.")
+            exit(1)
+
         df_cleaned = clean_air_quality(df)
 
         # Save the data via county
