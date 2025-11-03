@@ -1,7 +1,7 @@
 import pandas as pd
 from colorama import Fore
 from pathlib import Path
-from config import PROCESSED_DIR
+from src.config import PROCESSED_DIR
 
 
 # === 1. 通用 CSV 讀取 ===

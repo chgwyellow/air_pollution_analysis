@@ -3,7 +3,7 @@ from src.utils.IO_file import open_csv, save_multi_csv_no_index
 from colorama import Fore
 from config import RAW_DIR, PROCESSED_DIR
 
-city = "Kaohsiung_City/"
+city = "Kaohsiung_City"
 TARGET_PATH = PROCESSED_DIR / f"{city}.csv"
 
 

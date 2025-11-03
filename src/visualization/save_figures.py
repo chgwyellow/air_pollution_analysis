@@ -4,7 +4,7 @@ from datetime import datetime
 import plotly.graph_objects as go
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-from config import MAT_DIR, PLOTLY_DIR, PDF_DIR
+from src.config import MAT_DIR, PLOTLY_DIR, PDF_DIR
 from PIL import Image
 
 
