@@ -2,15 +2,13 @@ from pathlib import Path
 
 # === Paths ===
 BASE_DIR = Path(__file__).resolve().parent.parent
-RAW_DIR = BASE_DIR / "data" / "raw"
-PROCESSED_DIR = BASE_DIR / "data" / "processed"
-MAT_DIR = BASE_DIR / "output" / "figures" / "matplotlib"
-PLOTLY_DIR = BASE_DIR / "output" / "figures" / "plotly"
-PDF_DIR = BASE_DIR / "output" / "figures" / "pdf"
+DATA_DIR = BASE_DIR / "data"
+MODEL_DIR = BASE_DIR / "models"
+OUTPUT_DIR = BASE_DIR / "output"
 
-# 自動建立資料夾
-for path in [RAW_DIR, PROCESSED_DIR, MAT_DIR, PLOTLY_DIR, PDF_DIR]:
-    path.mkdir(parents=True, exist_ok=True)
+RAW_DIR = DATA_DIR / "raw"
+PROCESSED_DIR = DATA_DIR / "processed"
+FIGURE_DIR = DATA_DIR / "figures"
 
 # === Visualization Settings ===
 FIG_SIZE = (12, 8)

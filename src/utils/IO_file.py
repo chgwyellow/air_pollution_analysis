@@ -52,6 +52,6 @@ def save_multi_csv_no_index(county_list: list, df: pd.DataFrame) -> None:
         for county in county_list:
             temp = df[df["county"] == county]
             save_csv_no_index(df=temp, filename=county)
-        print(Fore.GREEN + "✅ All county-level CSV files have been saved.")
+        print(Fore.GREEN + f"✅ Cleaning complete! Files saved in {PROCESSED_DIR}")
     except Exception as e:
         print(Fore.RED + f"❌ Error while saving multiple CSVs: {e}")
