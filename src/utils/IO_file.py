@@ -1,3 +1,7 @@
+"""
+An utils lib containing data I/O functions.
+"""
+
 import pandas as pd
 from colorama import Fore
 from pathlib import Path
@@ -43,15 +47,3 @@ def save_csv_no_index(df: pd.DataFrame, filename: str) -> None:
         print(Fore.GREEN + f"💾 Saved file → {save_path}")
     except Exception as e:
         print(Fore.RED + f"❌ Failed to save file: {e}")
-
-
-# === 3. 多檔儲存（依縣市分開） ===
-def save_multi_csv_no_index(county_list: list, df: pd.DataFrame) -> None:
-    """Separate the DataFrame based on county and save them."""
-    try:
-        for county in county_list:
-            temp = df[df["county"] == county]
-            save_csv_no_index(df=temp, filename=county)
-        print(Fore.GREEN + f"✅ Cleaning complete! Files saved in {PROCESSED_DIR}")
-    except Exception as e:
-        print(Fore.RED + f"❌ Error while saving multiple CSVs: {e}")
