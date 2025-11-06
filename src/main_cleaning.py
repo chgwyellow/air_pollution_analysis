@@ -7,30 +7,37 @@ from src.utils.IO_file import open_csv, save_csv_no_index
 from colorama import Fore
 from config import RAW_DIR, PROCESSED_DIR
 import sys
+import time
 
 
 def main():
     raw_file = RAW_DIR / "air_quality.csv"
 
-    # 檢查檔案是否存在
+    # Check if the file is existing.
     if not raw_file.exists():
         print(Fore.RED + f"❌ File not found: {raw_file}")
         sys.exit(1)
 
-    print(Fore.YELLOW + f"📂 Loading raw data from: {raw_file}")
+    # Loading csv file
+    start = time.time()
     df = open_csv(raw_file)
 
-    # 清理資料
+    # Clean data
     print(Fore.BLUE + "🧹 Cleaning data...")
     df_cleaned = clean_air_quality(df)
+    end = time.time()
+    print(Fore.BLUE + f"Cleaning data costs {round((end - start), 2)} seconds.")
 
-    # 分縣市輸出
+    # Separate by county and city
     print(Fore.CYAN + "💾 Saving cleaned data by county...")
     county_list = df_cleaned["county"].unique()
     try:
         for county in county_list:
+            start = time.time()
             temp = df[df["county"] == county]
             save_csv_no_index(df=temp, filename=county)
+            end = time.time()
+            print(Fore.BLUE + f"🏁 It costs {round((end - start), 2)} seconds.")
         print(Fore.GREEN + f"✅ Cleaning complete! Files saved in {PROCESSED_DIR}")
     except Exception as e:
         print(Fore.RED + f"❌ Error while saving multiple CSVs: {e}")

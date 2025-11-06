@@ -19,7 +19,7 @@ def open_csv(path: str) -> pd.DataFrame:
         pd.DataFrame: A csv file will be transformed to DataFrame type.
     """
     try:
-        print(Fore.GREEN + f"📂 Loading CSV: {path}")
+        print(Fore.YELLOW + f"📂 Loading CSV: {path}")
         df = pd.read_csv(path, low_memory=False)
         print(Fore.GREEN + "✅ Read the csv file successfully.")
         return df
