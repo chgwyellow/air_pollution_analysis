@@ -1,8 +1,10 @@
 """
 The functions that features the elements for model prediction.
+It aims to establish the featrues of the statistics based on the cleaned data.
 """
 
 import pandas as pd
+
 from src.utils.emoji_log import success, warn
 
 
@@ -36,7 +38,7 @@ def add_rolling_features(
         if pollutant.lower() == "nox" and all(
             col in df.columns for col in ["no", "no2"]
         ):
-            warn(f"Skipping {pollutant} deu to NO + NO2 already exist.")
+            warn(f"Skipping {pollutant} due to NO + NO2 already exist.")
             continue
 
         for w in windows:
@@ -45,3 +47,5 @@ def add_rolling_features(
                 lambda x: x.rolling(w, min_periods=1).mean()
             )
     success("Rolling features added.")
+
+    return df

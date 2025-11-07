@@ -2,13 +2,15 @@
 Clean the row data and separate the files based on the county or city.
 """
 
-from src.cleaning.data_cleaning import clean_air_quality
-from src.utils.IO_file import open_csv, save_csv_no_index
-from src.utils.emoji_log import error, done, save, warn, success
-from config import RAW_DIR, PROCESSED_DIR
-from colorama import Fore
 import sys
 import time
+
+from colorama import Fore
+
+from config import PROCESSED_DIR, RAW_DIR
+from src.cleaning.data_cleaning import clean_air_quality
+from src.utils.emoji_log import done, error, save, success, warn
+from src.utils.IO_file import open_csv, save_csv_no_index
 
 
 def main():

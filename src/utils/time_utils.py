@@ -1,5 +1,6 @@
 import pandas as pd
-from src.utils.emoji_log import success, error
+
+from src.utils.emoji_log import error, success
 
 
 # -----------------------------

@@ -45,6 +45,21 @@ def save_csv_no_index(df: pd.DataFrame, filename: str) -> None:
 
     try:
         df.to_csv(save_path, index=False)
-        save(f"💾 Saved file → {save_path}")
+        save(f"Saved file → {save_path}")
     except Exception as e:
         error(f"Failed to save file: {e}")
+
+
+# === 3. 輸入檔案名稱判斷 ===
+def name_check(filename: str) -> Path:
+    path = Path(filename)
+
+    if path.suffix == "":
+        path = Path(filename + ".csv")
+    elif path.suffix != ".csv":
+        error(f"Invalid file extension: {filename}")
+        return None
+
+    full_path = PROCESSED_DIR / path
+
+    return full_path

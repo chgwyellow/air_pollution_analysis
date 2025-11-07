@@ -1,7 +1,8 @@
 import pandas as pd
-from src.utils.IO_file import save_csv_no_index
-from src.utils.time_utils import add_time_features
+
 from src.utils.emoji_log import success
+from src.utils.IO_file import save_csv_no_index
+from src.utils.time_utils import add_season_feature, add_time_features
 
 
 def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataFrame:
@@ -78,6 +79,9 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
 
     # Add time columns
     df = add_time_features(df)
+
+    # Add seasom colums
+    df = add_season_feature(df)
 
     success("Raw data has been cleaned.")
 
