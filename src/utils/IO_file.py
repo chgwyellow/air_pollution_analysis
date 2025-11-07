@@ -6,6 +6,7 @@ import pandas as pd
 from colorama import Fore
 from pathlib import Path
 from src.config import PROCESSED_DIR
+from src.utils.emoji_log import error, success, save
 
 
 # === 1. 通用 CSV 讀取 ===
@@ -21,13 +22,13 @@ def open_csv(path: str) -> pd.DataFrame:
     try:
         print(Fore.YELLOW + f"📂 Loading CSV: {path}")
         df = pd.read_csv(path, low_memory=False)
-        print(Fore.GREEN + "✅ Read the csv file successfully.")
+        success("Read the csv file successfully.")
         return df
     except FileNotFoundError:
-        print(Fore.RED + f"❌ File not found: {path}")
+        error(f"File not found: {path}")
         return pd.DataFrame()
     except Exception as e:
-        print(Fore.RED + f"❌ Failed to read CSV: {e}")
+        error(f"Failed to read CSV: {e}")
         return pd.DataFrame()
 
 
@@ -44,6 +45,6 @@ def save_csv_no_index(df: pd.DataFrame, filename: str) -> None:
 
     try:
         df.to_csv(save_path, index=False)
-        print(Fore.GREEN + f"💾 Saved file → {save_path}")
+        save(f"💾 Saved file → {save_path}")
     except Exception as e:
-        print(Fore.RED + f"❌ Failed to save file: {e}")
+        error(f"Failed to save file: {e}")

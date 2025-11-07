@@ -2,6 +2,7 @@ import pandas as pd
 from colorama import Fore
 from src.utils.IO_file import save_csv_no_index
 from src.utils.time_utils import add_time_features
+from src.utils.emoji_log import success
 
 
 def clean_air_quality(df: pd.DataFrame) -> pd.DataFrame:
@@ -74,7 +75,7 @@ def clean_air_quality(df: pd.DataFrame) -> pd.DataFrame:
     # Add time columns
     df = add_time_features(df)
 
-    print(Fore.GREEN + "✅ Raw data has been cleaned.")
+    success("Raw data has been cleaned.")
 
     save_csv_no_index(df, "Taiwan.csv")
 
