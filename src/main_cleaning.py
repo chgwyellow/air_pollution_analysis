@@ -19,13 +19,13 @@ def main():
         sys.exit(1)
 
     # Loading csv file
-    start = time.time()
+    start = time.perf_counter()
     df = open_csv(raw_file)
 
     # Clean data
     print(Fore.BLUE + "🧹 Cleaning data...")
     df_cleaned = clean_air_quality(df)
-    end = time.time()
+    end = time.perf_counter()
     print(Fore.BLUE + f"Cleaning data costs {round((end - start), 2)} seconds.")
 
     # Separate by county and city
@@ -33,10 +33,13 @@ def main():
     county_list = df_cleaned["county"].unique()
     try:
         for county in county_list:
-            start = time.time()
-            temp = df[df["county"] == county]
+            start = time.perf_counter()
+            temp = df_cleaned[df_cleaned["county"] == county]
+            if temp.empty:
+                print(Fore.YELLOW + f"⚠️ No data found for {county}, skipping...")
+                continue
             save_csv_no_index(df=temp, filename=county)
-            end = time.time()
+            end = time.perf_counter()
             print(Fore.BLUE + f"🏁 It costs {round((end - start), 2)} seconds.")
         print(Fore.GREEN + f"✅ Cleaning complete! Files saved in {PROCESSED_DIR}")
     except Exception as e:

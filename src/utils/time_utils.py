@@ -2,76 +2,57 @@ import pandas as pd
 
 
 # -----------------------------
-# 1. 根據時間顆粒度新增時間欄位
+# 1. add year, month, day, weekday, and hour in df
 # -----------------------------
-def add_time_columns(
-    df: pd.DataFrame,
-    time_granularity: str | None = None,
-    base_cols: list[str] | None = None,
-):
+def add_time_features(df: pd.DataFrame, data_col: str = "date") -> pd.DataFrame:
     """
-    根據 time_granularity 新增時間欄位並回傳 groupby 需要的欄位。
+    Add basic time-related features to the DataFrame.
 
-    參數：
-        df: DataFrame，需包含 'date' 欄位 (datetime 格式)
-        time_granularity: 可選 'year'、'month'、'day'、'hour'
-        base_cols: groupby 時的基礎欄位，例如 ["county"] 或 ["city", "sitename"]
+    Args:
+        df (pd.DataFrame): Input DataFrame containing a datetime column.
+        date_col (str): Name of the date column.
 
-    回傳：
-        df, group_cols
+    Returns:
+        pd.DataFrame: DataFrame with new columns: year, month, day, weekday, hour.
     """
+    df = df.copy()
+    df[data_col] = pd.to_datetime(df[data_col], errors="coerce")
 
-    if base_cols is None:
-        base_cols = []
-    # 如果傳入是str，轉成list
-    elif isinstance(base_cols, str):
-        base_cols = [base_cols]
+    df["year"] = df[data_col].dt.year
+    df["month"] = df[data_col].dt.month
+    df["day"] = df[data_col].dt.day
+    df["weekday"] = df[data_col].dt.weekday
+    df["hour"] = df[data_col].dt.hour
 
-    if time_granularity is None:
-        return df, base_cols
-
-    valid_levels = ["year", "month", "day", "hour"]
-    if time_granularity not in valid_levels:
-        raise ValueError(f"time_granularity 必須是 {valid_levels} 之一")
-
-    # 依 granularity 增加時間欄位
-    df["year"] = df["date"].dt.year
-    group_cols = base_cols + ["year"]
-
-    if time_granularity in ["month", "day", "hour"]:
-        df["month"] = df["date"].dt.month
-        group_cols.append("month")
-
-    if time_granularity in ["day", "hour"]:
-        df["day"] = df["date"].dt.day
-        group_cols.append("day")
-
-    if time_granularity == "hour":
-        df["hour"] = df["date"].dt.hour
-        group_cols.append("hour")
-
-    return df, group_cols
+    return df
 
 
 # -----------------------------
-# 2. 篩選一天中的時間段，最小可以是一小時
+# 2. Add season column
 # -----------------------------
-def filter_by_hour(df: pd.DataFrame, hour_range: tuple[int, int] | int | None = None):
+def add_season_feature(df: pd.DataFrame, month_col: str = "month") -> pd.DataFrame:
     """
-    篩選一天中指定小時或時段。
+    Add a 'season' column based on the month number.
 
-    hour_range:
-        - None: 不篩選
-        - int: 單一小時，例如 20
-        - tuple(start_hour, end_hour): 範圍，例如 (20, 23)
+    Args:
+        df (pd.DataFrame): DataFrame containing a 'month' column.
+        month_col (str): The column used to determine season.
+
+    Returns:
+        pd.DataFrame: DataFrame with a new 'season' column.
     """
-    if hour_range is None:
-        return df
 
-    if isinstance(hour_range, int):  # 只有一個時間
-        return df[df["date"].dt.hour == hour_range]
-    elif isinstance(hour_range, tuple):  # 一個時間區間
-        start, end = hour_range
-        return df[df["date"].dt.hour.between(start, end)]
-    else:
-        raise ValueError("hour_range 必須是 None, int, 或 tuple(int,int)")
+    def _get_season(month: int) -> str:
+        if month in [12, 1, 2]:
+            return "Winter"
+        elif month in [3, 4, 5]:
+            return "Spring"
+        elif month in [6, 7, 8]:
+            return "Summer"
+        else:
+            return "Autumn"
+
+    df = df.copy()
+    df["season"] = df[month_col].apply(_get_season)
+
+    return df
