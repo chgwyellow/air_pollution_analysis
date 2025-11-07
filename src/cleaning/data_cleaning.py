@@ -1,11 +1,10 @@
 import pandas as pd
-from colorama import Fore
 from src.utils.IO_file import save_csv_no_index
 from src.utils.time_utils import add_time_features
 from src.utils.emoji_log import success
 
 
-def clean_air_quality(df: pd.DataFrame) -> pd.DataFrame:
+def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataFrame:
     """
     Clean and preprocess nationwide air quality data.
 
@@ -71,6 +70,11 @@ def clean_air_quality(df: pd.DataFrame) -> pd.DataFrame:
 
     # Remove invalid or extreme AQI values
     df = df[(df["aqi"] >= 0) & (df["aqi"] <= 500)]
+
+    # Drop highly redundant pollutant average columns
+    if drop_high_corr:
+        drop_columns = ["pm2.5_avg", "pm10_avg"]
+        df.drop(columns=drop_columns, errors="ignore", inplace=True)
 
     # Add time columns
     df = add_time_features(df)
