@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 from src.utils.emoji_log import info, success, warn
@@ -53,9 +54,12 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
     df[existing_col] = df[existing_col].apply(pd.to_numeric, errors="coerce")
 
     # Handle missing values for major pollutants (fill by site mean)
-    pollutant_cols = ["aqi", "pm2.5", "pm10", "so2", "no2", "co", "o3"]
+    pollutant_cols = ["so2", "co", "o3", "pm10", "pm2.5", "no2", "nox", "no"]
     for col in pollutant_cols:
         if col in df.columns:
+            # if the pollutants less than 0, turn it to missing value
+            df.loc[df[col] < 0, col] = np.nan
+            # Fill na with the mean in every sitename
             df[col] = df.groupby("sitename")[col].transform(
                 lambda x: x.fillna(x.mean())
             )
@@ -84,8 +88,18 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
     warn("Filling missing windspeed/winddirec with global mean.")
 
     # Fill the pollutants with mean
-    if all(col in df.columns for col in ["no", "nox", "o3_8hr", "co_8hr"]):
-        df[col] = df.groupby("sitename")[col].transform(lambda x: x.fillna(x.mean()))
+    pollutant_cols = ["no", "nox", "o3_8hr", "co_8hr"]
+    for col in pollutant_cols:
+        if col in df.columns:
+            df[col] = df.groupby("sitename")[col].transform(
+                lambda x: x.fillna(x.mean())
+            )
+
+    # Fill the missing value in longtitude and latitude with mean
+    geo_cols = ["latitude", "longitude"]
+    for col in geo_cols:
+        if col in df.columns:
+            df[col] = df.groupby("county")[col].transform(lambda x: x.fillna(x.mean()))
 
     # Add time columns
     df = add_time_features(df)

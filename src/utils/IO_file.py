@@ -68,6 +68,3 @@ def name_check(filename: str) -> Path:
     full_path = PROCESSED_DIR / path
 
     return full_path
-
-    return full_path
-    return full_path

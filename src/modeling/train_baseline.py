@@ -7,7 +7,7 @@ from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
-from config import MODEL_DIR, PROCESSED_DIR
+from src.config import MODEL_DIR, PROCESSED_DIR
 from src.utils.emoji_log import error, info, success, warn
 from src.utils.IO_file import name_check, open_csv
 
