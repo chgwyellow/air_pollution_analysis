@@ -17,6 +17,8 @@ def load_cleaned_data(filename: str) -> pd.DataFrame:
     """Load processed air quality data from CSV."""
     path = name_check(filename)
     df = open_csv(path)
+    # Transfer the date column to datetime type
+    df["date"] = pd.to_datetime(df["date"], format="%Y-%m-%d %H:%M:%S", errors="coerce")
 
     return df
 
@@ -52,6 +54,8 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
 
     # Check the X and y shape
     info(f"Features shape: {X.shape}, Target shape: {y.shape}")
+
+    return (X, y)
 
 
 # 3️⃣ 資料分割

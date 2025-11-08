@@ -1,6 +1,6 @@
 import pandas as pd
 
-from src.utils.emoji_log import success
+from src.utils.emoji_log import info, success, warn
 from src.utils.IO_file import save_csv_no_index
 from src.utils.time_utils import add_season_feature, add_time_features
 
@@ -66,9 +66,6 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
     # replace the space between county name with _
     df["county"] = df["county"].str.replace(" ", "_")
 
-    # Remove duplicate rows
-    df = df.drop_duplicates()
-
     # Remove invalid or extreme AQI values
     df = df[(df["aqi"] >= 0) & (df["aqi"] <= 500)]
 
@@ -77,13 +74,31 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
         drop_columns = ["pm2.5_avg", "pm10_avg"]
         df.drop(columns=drop_columns, errors="ignore", inplace=True)
 
+    # With too high missing value percentage, we drop it.
+    drop_cols = ["pollutant", "siteid", "so2_avg"]
+    df = df.drop(columns=drop_cols, errors="ignore")
+
+    # Fill the missing value in windspeed and winddirec with mean
+    df["windspeed"] = df["windspeed"].fillna(df["windspeed"].mean())
+    df["winddirec"] = df["winddirec"].fillna(df["winddirec"].mean())
+    warn("Filling missing windspeed/winddirec with global mean.")
+
+    # Fill the pollutants with mean
+    if all(col in df.columns for col in ["no", "nox", "o3_8hr", "co_8hr"]):
+        df[col] = df.groupby("sitename")[col].transform(lambda x: x.fillna(x.mean()))
+
     # Add time columns
     df = add_time_features(df)
 
     # Add seasom colums
     df = add_season_feature(df)
 
+    # Remove duplicate rows
+    df = df.drop_duplicates()
+
     success("Raw data has been cleaned.")
+
+    info(f"Shape: {df.shape}")
 
     save_csv_no_index(df, "Taiwan.csv")
 

@@ -9,7 +9,7 @@ from colorama import Fore
 
 from config import PROCESSED_DIR, RAW_DIR
 from src.cleaning.data_cleaning import clean_air_quality
-from src.utils.emoji_log import done, error, save, success, warn
+from src.utils.emoji_log import done, error, info, save, success, warn
 from src.utils.IO_file import open_csv, save_csv_no_index
 
 
@@ -43,6 +43,7 @@ def main():
                 continue
             save_csv_no_index(df=temp, filename=county)
             end = time.perf_counter()
+            info(f"Shape: {temp.shape}")
             done(f"It costs {round((end - start), 2)} seconds.")
         success(f"Cleaning complete! Files saved in {PROCESSED_DIR}")
     except Exception as e:

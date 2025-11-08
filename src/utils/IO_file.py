@@ -2,15 +2,17 @@
 An utils lib containing data I/O functions.
 """
 
+from pathlib import Path
+
 import pandas as pd
 from colorama import Fore
-from pathlib import Path
+
 from src.config import PROCESSED_DIR
-from src.utils.emoji_log import error, success, save
+from src.utils.emoji_log import error, save, success
 
 
 # === 1. 通用 CSV 讀取 ===
-def open_csv(path: str) -> pd.DataFrame:
+def open_csv(path: str, parse_dates: list[str] | None = None) -> pd.DataFrame:
     """Retrieve the csv file.
 
     Args:
@@ -19,10 +21,13 @@ def open_csv(path: str) -> pd.DataFrame:
     Returns:
         pd.DataFrame: A csv file will be transformed to DataFrame type.
     """
+    if not isinstance(path, Path):
+        path = Path(path)
+
     try:
         print(Fore.YELLOW + f"📂 Loading CSV: {path}")
-        df = pd.read_csv(path, low_memory=False)
-        success("Read the csv file successfully.")
+        df = pd.read_csv(path, encoding="utf-8-sig", low_memory=False)
+        success(f"Read CSV successfully! Shape: {df.shape}")
         return df
     except FileNotFoundError:
         error(f"File not found: {path}")
@@ -62,4 +67,7 @@ def name_check(filename: str) -> Path:
 
     full_path = PROCESSED_DIR / path
 
+    return full_path
+
+    return full_path
     return full_path
