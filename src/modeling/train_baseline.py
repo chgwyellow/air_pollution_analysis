@@ -30,24 +30,8 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     df.dropna(subset=["aqi"], inplace=True)
     y = df["aqi"]
 
-    # Features columns
-    features_cols = [
-        "so2",
-        "co",
-        "o3",
-        "pm10",
-        "pm2.5",
-        "no2",
-        "no",
-        "nox",
-        "windspeed",
-    ] + [col for col in df.columns if "rolling" in col]
-
-    # Filter the actual existing columns
-    features_cols = [col for col in features_cols if col in df.columns]
-
     # Establish X
-    X = df[features_cols].copy()
+    X = df.drop(columns=["date", "county", "sitename", "status", "aqi", "season"])
 
     # Fill the na with 0
     X = X.fillna(0)

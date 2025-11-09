@@ -3,10 +3,13 @@ The functions that features the elements for model prediction.
 It aims to establish the featrues of the statistics based on the cleaned data.
 """
 
+import joblib
 import numpy as np
 import pandas as pd
+from sklearn.preprocessing import StandardScaler
 
-from src.utils.emoji_log import success, warn
+from src.config import MODEL_DIR
+from src.utils.emoji_log import error, save, success, warn
 
 
 # -----------------------------
@@ -112,3 +115,47 @@ def log_transform_features(df, cols=None):
 
     success("Pollutants skewes has been smoothed.")
     return df
+
+
+# -----------------------------
+# 5. scale features
+# -----------------------------
+def scale_features(
+    df: pd.DataFrame, exclude: list[str] | None = None, save_: bool = True
+) -> tuple[pd.DataFrame, StandardScaler]:
+    """
+    Scale numerical features using StandardScaler (mean=0, std=1).
+
+    Args:
+        df (pd.DataFrame): The input dataframe containing numerical features.
+        exclude (list[str] | None): Columns to exclude from scaling (e.g., target or categorical).
+
+    Returns:
+        tuple[pd.DataFrame, StandardScaler]:
+            - The scaled dataframe (same shape, same column names).
+            - The fitted StandardScaler object (for saving or reusing later).
+    """
+
+    try:
+        df_scaled = df.copy()
+
+        # Define excluded columns
+        exclude = exclude or []
+        cols_to_scale = [col for col in df.columns if col not in exclude]
+
+        scaler = StandardScaler()
+        df_scaled[cols_to_scale] = scaler.fit_transform(df_scaled[cols_to_scale])
+
+        success(
+            f"Numerical features have been standardized. ({len(cols_to_scale)} columns scaled)"
+        )
+
+        if save_:
+            joblib.dump(scaler, MODEL_DIR / "standard_scaler.pkl")
+            save("Scaler has been saved!")
+
+        return df_scaled, scaler
+
+    except Exception as e:
+        error(f"Feature scaling failed: {e}")
+        return df, None
