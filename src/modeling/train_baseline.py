@@ -43,15 +43,50 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
 
 
 # 3️⃣ 資料分割
-def split_data(X, y, test_size=0.2, random_state=42):
-    """Split dataset into training and testing sets."""
-    ...
+def split_train_test(
+    X, y, test_size: float = 0.2, random_state: int = 42, show_info: bool = True
+) -> dict[str, any]:
+    """
+    Split dataset into training and testing sets for model evaluation.
+
+    Args:
+        X (pd.DataFrame): Feature matrix.
+        y (pd.Series): Target variable.
+        test_size (float): Proportion of the dataset to include in the test split.
+        random_state (int): Seed used by the random number generator.
+        show_info (bool): Whether to print dataset size info.
+
+    Returns:
+        dict: A dictionary containing X_train, X_test, y_train, y_test.
+    """
+
+    try:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y, test_size, random_state
+        )
+
+        if show_info:
+            success(
+                f"Data successfully split! "
+                f"Train: {X_train.shape}, Test: {X_test.shape}"
+            )
+
+        return {
+            "X_train": X_train,
+            "X_test": X_test,
+            "y_train": y_train,
+            "y_test": y_test,
+        }
+    except Exception as e:
+        error(f"Train-test split failed: {e}")
+        return {}
 
 
 # 4️⃣ 模型訓練
-def train_model(X_train, y_train):
-    """Train baseline Linear Regression model."""
-    ...
+def train_baseline_model(data_split: dict) -> tuple[LinearRegression, dict]:
+    """
+    Train and evaluate a simple Linear Regression model.
+    """
 
 
 # 5️⃣ 模型評估
