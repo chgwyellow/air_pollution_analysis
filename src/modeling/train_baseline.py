@@ -1,14 +1,9 @@
-from pathlib import Path
-
-import joblib
-import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 
-from src.config import MODEL_DIR, PROCESSED_DIR
-from src.utils.emoji_log import error, info, success, warn
+from src.modeling.evaluate_model import evaluate_and_save
+from src.utils.emoji_log import error, info, success
 from src.utils.IO_file import name_check, open_csv
 
 
@@ -42,12 +37,12 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     return (X, y)
 
 
-# 3️⃣ 資料分割
+# 3️⃣ split data
 def split_train_test(
     X, y, test_size: float = 0.2, random_state: int = 42, show_info: bool = True
 ) -> dict[str, any]:
     """
-    Split dataset into training and testing sets for model evaluation.
+    Split scaled dataset into training and testing sets for model evaluation.
 
     Args:
         X (pd.DataFrame): Feature matrix.
@@ -82,20 +77,18 @@ def split_train_test(
         return {}
 
 
-# 4️⃣ 模型訓練
-def train_baseline_model(data_split: dict) -> tuple[LinearRegression, dict]:
+# 4️⃣ train model
+def train_linear_model(data_split: dict) -> tuple[LinearRegression, dict]:
     """
-    Train and evaluate a simple Linear Regression model.
+    Train Linear Regression model and evaluate performance.
     """
+    X_train, X_test = data_split["X_train"], data_split["X_test"]
+    y_train, y_test = data_split["y_train"], data_split["y_test"]
 
+    model = LinearRegression()
+    model.fit(X=X_train, y=y_train)
 
-# 5️⃣ 模型評估
-def evaluate_model(model, X_test, y_test):
-    """Calculate MAE, RMSE, and R² metrics."""
-    ...
+    # Evaluate
+    metrics = evaluate_and_save(model, X_test, y_test, "Baseline_linear")
 
-
-# 6️⃣ 模型儲存（可選）
-def save_model(model, model_path: Path):
-    """Save trained model to /models directory."""
-    ...
+    return model, metrics
