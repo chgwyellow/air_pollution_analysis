@@ -122,7 +122,7 @@ def log_transform_features(df, cols=None):
 # -----------------------------
 def scale_features(
     df: pd.DataFrame, exclude: list[str] | None = None, save_: bool = True
-) -> tuple[pd.DataFrame, StandardScaler]:
+):
     """
     Scale numerical features using StandardScaler (mean=0, std=1).
 
@@ -153,9 +153,10 @@ def scale_features(
         if save_:
             joblib.dump(scaler, MODEL_DIR / "standard_scaler.pkl")
             save("Scaler has been saved!")
+            return df_scaled, scaler
 
-        return df_scaled, scaler
+        return df_scaled
 
     except Exception as e:
         error(f"Feature scaling failed: {e}")
-        return df, None
+        return df
