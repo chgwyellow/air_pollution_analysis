@@ -210,3 +210,6 @@ data/*
 !/data/.gitkeep
 
 emoji.txt
+
+*.pkl
+*.joblib
