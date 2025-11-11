@@ -2,7 +2,7 @@ import datetime
 import json
 
 import joblib
-from sklearn.metrics import mean_absolute_error, r2_score, root_mean_square_error
+from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
 
 from src.config import MODEL_DIR
 from src.utils.emoji_log import info, save
@@ -15,7 +15,7 @@ def evaluate_and_save(model, X_test, y_test, model_name: str):
 
     # === 2. Compute metrics ===
     mae = mean_absolute_error(y_test, y_pred)
-    rmse = root_mean_square_error(y_test, y_pred)
+    rmse = root_mean_squared_error(y_test, y_pred)
     r2 = r2_score(y_test, y_pred)
 
     metrics = {"MAE": mae, "RMSE": rmse, "R2": r2}
