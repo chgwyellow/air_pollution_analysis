@@ -8,7 +8,9 @@ OUTPUT_DIR = BASE_DIR / "output"
 
 RAW_DIR = DATA_DIR / "raw"
 PROCESSED_DIR = DATA_DIR / "processed"
-FIGURE_DIR = DATA_DIR / "figures"
+
+FIGURE_DIR = OUTPUT_DIR / "figures"
+PREDICTION_DIR = OUTPUT_DIR / "predictions"
 
 # === Visualization Settings ===
 FIG_SIZE = (12, 8)
