@@ -5,12 +5,13 @@ from src.features.feature_engineering import (
     log_transform_features,
     scale_features,
 )
+from src.modeling.model_registry import MODEL_REGISTRY
 from src.modeling.train_baseline import (
     build_features,
     load_cleaned_data,
     split_train_test,
 )
-from src.utils.emoji_log import error
+from src.utils.emoji_log import done, error
 
 
 def run_model_pipeline(filename: str, model_type: str = "linear"):
@@ -28,16 +29,15 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
     data_split = split_train_test(X_scaled, y)
 
     # === Model Training ===
-    if model_type == "linear":
-        from src.modeling.train_baseline import train_linear_model
-
-        model, metrics = train_linear_model(data_split)
-    elif model_type == "rf":
-        from src.modeling.train_rf import train_random_forest
-
-        model, metrics = train_random_forest(data_split)
-    else:
+    if model_type not in MODEL_REGISTRY:
         raise ValueError(error(f"Unsupported model type: {model_type}"))
+
+    train_func = MODEL_REGISTRY[model_type]
+    model, metrics = train_func(data_split)
+
+    done(f"{model_type} model pipeline completed successfully!")
+
+    return model, metrics
 
 
 if __name__ == "__main__":
