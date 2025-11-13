@@ -25,7 +25,7 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
 
     # === Feature Selection & Scaling ===
     X, y = build_features(df_log)
-    X_scaled = scale_features(X)
+    X_scaled = scale_features(X, save_=False)
     data_split = split_train_test(X_scaled, y)
 
     # === Model Training ===
