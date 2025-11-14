@@ -30,6 +30,7 @@ def evaluate_and_save(model, X_test, y_test, model_name: str, save_file: bool = 
 
         # === 4. Save metrics ===
         metrics_path = MODEL_DIR / f"{model_name}_metrics_{timestamp}.json"
+        metrics = {"MAE": mae, "RMSE": rmse, "R2": r2, "timestamp": timestamp}
         with open(metrics_path, "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=4)
         save(f"Metrics saved at {metrics_path}")
