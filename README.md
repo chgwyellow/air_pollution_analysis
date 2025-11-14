@@ -142,7 +142,7 @@ Data cleaning, feature engineering, modeling and visualization on the Taiwan air
 
 ---
 
-## 🧪 Field Summary（selected）
+## 🧪 Field Summary）
 
 | Field | Description |
 |-------|-------------|
