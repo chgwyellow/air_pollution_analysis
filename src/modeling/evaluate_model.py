@@ -4,7 +4,7 @@ import json
 import joblib
 from sklearn.metrics import mean_absolute_error, r2_score, root_mean_squared_error
 
-from src.config import MODEL_DIR
+from src.config import MODEL_DIR, RESULT_DIR
 from src.utils.emoji_log import info, save
 
 
@@ -29,7 +29,7 @@ def evaluate_and_save(model, X_test, y_test, model_name: str, save_file: bool = 
         save(f"{model_name} model saved at {model_path}")
 
         # === 4. Save metrics ===
-        metrics_path = MODEL_DIR / f"{model_name}_metrics_{timestamp}.json"
+        metrics_path = RESULT_DIR / f"{model_name}_metrics_{timestamp}.json"
         metrics = {"MAE": mae, "RMSE": rmse, "R2": r2, "timestamp": timestamp}
         with open(metrics_path, "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=4)
