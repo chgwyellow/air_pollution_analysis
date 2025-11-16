@@ -115,6 +115,7 @@ def log_transform_features(df, cols=None):
         ]
     for c in cols:
         if c in df.columns:
+            df[c] = df[c].clip(lower=0)
             df[c] = np.log1p(df[c])  # log(1+x) to avoid log(0)
 
     success("Pollutants skewes has been smoothed.")
@@ -141,6 +142,9 @@ def scale_features(
 
     exclude = exclude or []
     cols_to_scale = [col for col in df.columns if col not in exclude]
+
+    if df.index.names is not None:
+        df_scaled.reset_index(drop=True, inplace=True)
 
     # --- train mode ---
     if mode == "train":

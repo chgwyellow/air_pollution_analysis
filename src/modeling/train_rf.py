@@ -20,6 +20,8 @@ def train_random_forest(data_split: dict, **kwargs):
         "max_depth": None,
         "random_state": 42,
         "n_jobs": -1,
+        "oob_score": True,
+        "bootstrap": True,
     }
     rf_params.update(kwargs)
 

@@ -22,6 +22,7 @@ def load_cleaned_data(filename: str) -> pd.DataFrame:
 def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     """Select features (X) and target (y) for modeling."""
     # The target is aqi
+    df = df.copy()
     df.dropna(subset=["aqi"], inplace=True)
     y = df["aqi"]
 

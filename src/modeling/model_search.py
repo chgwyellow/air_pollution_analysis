@@ -16,7 +16,7 @@ from src.utils.emoji_log import info, success
 
 def run_random_search(X_train, y_train, cv=3, n_iter=20, random_state=42):
     """Run RandomizedSearch for Random Forest."""
-    rf = RandomForestRegressor(random_state=random_state)
+    rf = RandomForestRegressor(n_jobs=-1, random_state=random_state)
 
     search = RandomizedSearchCV(
         estimator=rf,
@@ -71,7 +71,7 @@ def run_grid_search(
     else:
         grid = get_rf_grid_params()
 
-    rf = RandomForestRegressor(**base_params)
+    rf = RandomForestRegressor(n_jobs=-1, **base_params)
 
     search = GridSearchCV(
         estimator=rf,
