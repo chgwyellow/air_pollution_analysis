@@ -33,7 +33,30 @@ def clip_pollutants(
 
 
 # -----------------------------
-# 2. add pollutants rolling features to the df
+# 2. establish IQR
+# -----------------------------
+def handle_outliers_iqr(df: pd.DataFrame, columns: list[str] = None) -> pd.DataFrame:
+    """
+    Apply IQR-based clipping to reduce the influence of extreme outliers.
+    """
+    if columns is None:
+        columns = ["pm2.5", "pm10", "so2", "co", "o3", "no", "no2", "nox"]
+
+    for col in columns:
+        if col in df.columns:
+            Q1, Q3 = df[col].quantile([0.25, 0.75])
+            IQR = Q3 - Q1
+            lower = Q1 - 1.5 * IQR
+            upper = Q3 + 1.5 * IQR
+            df[col] = df[col].clip(lower, upper)
+
+    success("IQR has been set.")
+
+    return df
+
+
+# -----------------------------
+# 3. add pollutants rolling features to the df
 # -----------------------------
 def add_rolling_features(
     df: pd.DataFrame, pollutants: list[str] = None, windows: list[int] = [3, 7]
@@ -80,35 +103,16 @@ def add_rolling_features(
 
 
 # -----------------------------
-# 3. establish IQR
-# -----------------------------
-def handle_outliers_iqr(df: pd.DataFrame, columns: list[str] = None) -> pd.DataFrame:
-    """
-    Apply IQR-based clipping to reduce the influence of extreme outliers.
-    """
-    if columns is None:
-        columns = ["pm2.5", "pm10", "so2", "co", "o3", "no", "no2", "nox"]
-
-    for col in columns:
-        if col in df.columns:
-            Q1, Q3 = df[col].quantile([0.25, 0.75])
-            IQR = Q3 - Q1
-            lower = Q1 - 1.5 * IQR
-            upper = Q3 + 1.5 * IQR
-            df[col] = df[col].clip(lower, upper)
-
-    success("IQR has been set.")
-
-    return df
-
-
-# -----------------------------
 # 4. smooth the pollutants skewes
 # -----------------------------
 def log_transform_features(df, cols=None):
     """Apply log1p transform to skewed pollutant features for modeling."""
     if cols is None:
-        cols = ["pm2.5", "pm10", "so2", "co", "o3", "no", "no2", "nox"]
+        cols = [
+            col
+            for col in df.columns
+            if any(k in col for k in ["pm", "so2", "o3", "co", "no"])
+        ]
     for c in cols:
         if c in df.columns:
             df[c] = np.log1p(df[c])  # log(1+x) to avoid log(0)
@@ -121,42 +125,36 @@ def log_transform_features(df, cols=None):
 # 5. scale features
 # -----------------------------
 def scale_features(
-    df: pd.DataFrame, exclude: list[str] | None = None, save_: bool = True
+    df: pd.DataFrame,
+    scaler=None,
+    exclude: list[str] | None = None,
+    mode="train",
+    save_: bool = True,
 ):
     """
-    Scale numerical features using StandardScaler (mean=0, std=1).
-
-    Args:
-        df (pd.DataFrame): The input dataframe containing numerical features.
-        exclude (list[str] | None): Columns to exclude from scaling (e.g., target or categorical).
-
-    Returns:
-        tuple[pd.DataFrame, StandardScaler]:
-            - The scaled dataframe (same shape, same column names).
-            - The fitted StandardScaler object (for saving or reusing later).
+    Scaling helper:
+    mode="train": fit + transform, return df_scaled + new scaler
+    mode="test":  transform only, return df_scaled (must pass scaler)
     """
 
-    try:
-        df_scaled = df.copy()
+    df_scaled = df.copy()
 
-        # Define excluded columns
-        exclude = exclude or []
-        cols_to_scale = [col for col in df.columns if col not in exclude]
+    exclude = exclude or []
+    cols_to_scale = [col for col in df.columns if col not in exclude]
 
+    # --- train mode ---
+    if mode == "train":
         scaler = StandardScaler()
         df_scaled[cols_to_scale] = scaler.fit_transform(df_scaled[cols_to_scale])
-
-        success(
-            f"Numerical features have been standardized. ({len(cols_to_scale)} columns scaled)"
-        )
 
         if save_:
             joblib.dump(scaler, MODEL_DIR / "standard_scaler.pkl")
             save("Scaler has been saved!")
-            return df_scaled, scaler
+        return df_scaled, scaler
 
+    # --- test mode ---
+    elif mode == "test":
+        if scaler is None:
+            raise ValueError("Scaler must be provided in test mode.")
+        df_scaled[cols_to_scale] = scaler.transform(df_scaled[cols_to_scale])
         return df_scaled
-
-    except Exception as e:
-        error(f"Feature scaling failed: {e}")
-        return df

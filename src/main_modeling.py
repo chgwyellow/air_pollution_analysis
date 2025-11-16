@@ -65,23 +65,28 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
     # Step 1: Clip pollutants to reasonable range
     df_clip = clip_pollutants(df.copy())
 
-    # Step 2: Add rolling mean features (3-day, 7-day)
-    df_rolling = add_rolling_features(df_clip)
+    # Step 2: Reduce extreme outliers using IQR clipping
+    df_iqr = handle_outliers_iqr(df_clip)
 
-    # Step 3: Reduce extreme outliers using IQR clipping
-    df_iqr = handle_outliers_iqr(df_rolling)
+    # Step 3: Add rolling mean features (3-day, 7-day)
+    df_rolling = add_rolling_features(df_iqr)
 
     # Step 4: Log-transform skewed pollutants
-    df_log = log_transform_features(df_iqr)
+    df_log = log_transform_features(df_rolling)
 
     # === 3. Feature selection & scaling ===
     X, y = build_features(df_log)
 
-    # Scale all features (except excluded)
-    X_scaled = scale_features(X, save_=False)
-
     # Split into train/test sets
-    data_split = split_train_test(X_scaled, y)
+    data_split = split_train_test(X, y)
+    X_train, X_test = data_split["X_train"], data_split["X_test"]
+
+    # fit train and transform test features (except excluded)
+    X_train_scaled, scaler = scale_features(X_train, mode="train", save_=True)
+    X_test_scaled = scale_features(X_test, scaler=scaler, mode="test")
+
+    data_split["X_train"] = X_train_scaled
+    data_split["X_test"] = X_test_scaled
 
     # === 4. Model selection via Model Registry ===
     if model_type not in MODEL_REGISTRY:
