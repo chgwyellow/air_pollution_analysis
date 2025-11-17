@@ -113,7 +113,10 @@ def log_transform_features(df, cols=None):
             for col in df.columns
             if any(k in col for k in ["pm", "so2", "o3", "co", "no"])
         ]
-    for c in cols:
+        
+    # only select numerical column
+    numeric_cols = df[cols].select_dtypes(include=["int64", "float64"]).columns
+    for c in numeric_cols:
         if c in df.columns:
             df[c] = df[c].clip(lower=0)
             df[c] = np.log1p(df[c])  # log(1+x) to avoid log(0)

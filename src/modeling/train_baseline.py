@@ -79,7 +79,9 @@ def split_train_test(
 
 
 # 4️⃣ train model
-def train_linear_model(data_split: dict) -> tuple[LinearRegression, dict]:
+def train_linear_model(
+    data_split: dict, model_name: str, model_path: str
+) -> tuple[LinearRegression, dict]:
     """
     Train Linear Regression model and evaluate performance.
     """
@@ -90,6 +92,6 @@ def train_linear_model(data_split: dict) -> tuple[LinearRegression, dict]:
     model.fit(X=X_train, y=y_train)
 
     # Evaluate
-    metrics = evaluate_and_save(model, X_test, y_test, "Baseline_linear")
+    metrics = evaluate_and_save(model, X_test, y_test, model_name, model_path)
 
     return model, metrics

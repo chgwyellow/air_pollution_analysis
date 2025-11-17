@@ -1,9 +1,22 @@
+from src.config import MODEL_LINEAR_DIR, MODEL_RF_DIR, MODEL_RF_TUNED_DIR
 from src.modeling.train_baseline import train_linear_model
 from src.modeling.train_rf import train_random_forest
 from src.modeling.tune_rf import tune_random_forest
 
 MODEL_REGISTRY = {
-    "linear": train_linear_model,
-    "rf": train_random_forest,
-    "rf_tuned": tune_random_forest,
+    "linear": {
+        "model_name": "Baseline_linear",
+        "save_dir": MODEL_LINEAR_DIR,
+        "train_func": train_linear_model,
+    },
+    "rf": {
+        "model_name": "RandomForest",
+        "save_dir": MODEL_RF_DIR,
+        "train_func": train_random_forest,
+    },
+    "rf_tuned": {
+        "model_name": "RandomForest_Tuned",
+        "save_dir": MODEL_RF_TUNED_DIR,
+        "train_func": tune_random_forest,
+    },
 }

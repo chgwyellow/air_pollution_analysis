@@ -7,6 +7,8 @@ from src.utils.emoji_log import done, info
 
 def tune_random_forest(
     data_split: dict,
+    model_name: str,
+    model_path: str,
     grid_sample_ratio=0.3,
     use_dynamic_grid=True,
 ):
@@ -52,6 +54,8 @@ def tune_random_forest(
     # ---------------------------------------------------------
     done("Tuning complete! Evaluating final model...")
 
-    final_metrics = evaluate_and_save(final_model, X_test, y_test, "RandomForest_Tuned")
+    final_metrics = evaluate_and_save(
+        final_model, X_test, y_test, model_name, model_path
+    )
 
     return final_model, final_metrics

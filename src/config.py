@@ -13,11 +13,9 @@ PROCESSED_DIR = DATA_DIR / "processed"
 FIGURE_DIR = OUTPUT_DIR / "figures"
 PREDICTION_DIR = OUTPUT_DIR / "predictions"
 
-# === Visualization Settings ===
-FIG_SIZE = (12, 8)
-FONT_SIZE = 14
-TITLE_FONT_SIZE = 18
-COLOR_PALETTE = ["#2E86AB", "#F6C85F", "#6FB07F", "#9B6A6C"]
+MODEL_LINEAR_DIR = MODEL_DIR / "linear"
+MODEL_RF_DIR = MODEL_DIR / "rf"
+MODEL_RF_TUNED_DIR = MODEL_DIR / "rf_tuned"
 
-# === Other constants ===
-SEED = 42
+TITLE_FONT_SIZE = 18
+FONT_SIZE = 14

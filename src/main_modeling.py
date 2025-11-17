@@ -21,6 +21,10 @@ You can run the whole pipeline simply by:
 This makes the modeling process fully modular, reusable, and maintainable.
 """
 
+import joblib
+import pandas as pd
+
+from src.config import MODEL_DIR, PROCESSED_DIR
 from src.features.feature_engineering import (
     add_rolling_features,
     clip_pollutants,
@@ -77,6 +81,11 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
     # === 3. Feature selection & scaling ===
     X, y = build_features(df_log)
 
+    # Save the training dataset used for visualization
+    df_training_clean = pd.concat([X, y], axis=1)
+    df_training_clean.to_parquet(PROCESSED_DIR / "training_data_cleaned.parquet")
+    joblib.dump(list(X.columns), MODEL_DIR / "feature_names.pkl")
+
     # Split into train/test sets
     data_split = split_train_test(X, y)
     X_train, X_test = data_split["X_train"], data_split["X_test"]
@@ -92,10 +101,14 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
     if model_type not in MODEL_REGISTRY:
         raise ValueError(error(f"Unsupported model type: {model_type}"))
 
-    train_func = MODEL_REGISTRY[model_type]
+    model_info = MODEL_REGISTRY[model_type]
+
+    train_func = model_info["train_func"]
+    model_name = model_info["model_name"]
+    model_path = model_info["save_dir"]
 
     # === 5. Train + Save model & metrics ===
-    model, metrics = train_func(data_split)
+    model, metrics = train_func(data_split, model_name, model_path)
 
     done(f"Pipeline completed successfully! ({model_type})")
 

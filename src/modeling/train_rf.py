@@ -4,7 +4,7 @@ from src.modeling.evaluate_model import evaluate_and_save
 from src.utils.emoji_log import done
 
 
-def train_random_forest(data_split: dict, **kwargs):
+def train_random_forest(data_split: dict, model_name: str, model_path: str, **kwargs):
     """
     Train Random Forest model and evaluate performance.
     Args:
@@ -29,6 +29,6 @@ def train_random_forest(data_split: dict, **kwargs):
     rf_model.fit(X=X_train, y=y_train)
     done("Random Forest trained successfully!")
 
-    metrics = evaluate_and_save(rf_model, X_test, y_test, "RandomForest")
+    metrics = evaluate_and_save(rf_model, X_test, y_test, model_name, model_path)
 
     return rf_model, metrics
