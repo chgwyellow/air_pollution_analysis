@@ -107,13 +107,16 @@ def add_rolling_features(
 # -----------------------------
 def log_transform_features(df, cols=None):
     """Apply log1p transform to skewed pollutant features for modeling."""
+    target_col = "aqi"
+
     if cols is None:
         cols = [
             col
             for col in df.columns
             if any(k in col for k in ["pm", "so2", "o3", "co", "no"])
+            and col != target_col
         ]
-        
+
     # only select numerical column
     numeric_cols = df[cols].select_dtypes(include=["int64", "float64"]).columns
     for c in numeric_cols:
