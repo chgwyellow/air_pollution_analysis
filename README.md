@@ -1,7 +1,10 @@
-# Taiwan Air Pollution Analysis
+# 🇹🇼 Taiwan Air Pollution Analysis (2016–2024)
 
-Data cleaning, feature engineering, modeling and visualization on the Taiwan air quality dataset (Kaggle, 2016–2024).  
-針對 **台灣 2016–2024 空氣品質資料** 進行資料清理、特徵工程、建模與視覺化分析。
+A complete end-to-end machine learning project including **data cleaning**,  
+**feature engineering**, **modeling**, **hyperparameter tuning**,  
+**explainability (SHAP)**, and **prediction evaluation** using Taiwan’s 2016–2024 air quality dataset.
+
+使用台灣空氣品質資料（2016–2024）完成 **資料清理**、**特徵工程**、**模型建立**、**模型調校**、**特徵重要性分析（SHAP）** 與 **模型評估** 的完整專案。
 
 ---
 
@@ -17,132 +20,143 @@ Data cleaning, feature engineering, modeling and visualization on the Taiwan air
 ```text
 .
 ├─ data/
-│  ├─ raw/               # 原始資料（air_quality.csv）
-│  │  └─ .gitkeep
-│  └─ processed/         # 清理後資料
+│  ├─ raw/                # 原始資料 (air_quality.csv)
+│  └─ processed/          # 清理後資料
 │
-├─ models/               # 訓練後模型與物件
-│  ├─ *.pkl
-│  ├─ *.json
+├─ models/                # 訓練後的模型 & scaler
 │
-├─ notebook/
+├─ notebook/              # Jupyter Notebook 分章呈現
 │  ├─ 01_data_cleaning_check.ipynb
 │  ├─ 02_feature_check.ipynb
 │  ├─ 03_baseline_modeling.ipynb
 │  ├─ 04_nonlinear_modeling.ipynb
-│  └─ 05_model_optimization.ipynb
+│  ├─ 05_model_optimization.ipynb
+│  ├─ 06_model_explainability_shap_analysis.ipynb
+│  └─ 07_model_prediction_evaluation.ipynb
 │
 ├─ output/
-│  ├─ figures/            # 圖表輸出
-│  ├─ predictions/        # 預測結果
-|
-├─ result/                # 參數與cv結果
+│  ├─ figures/            # SHAP / EDA / 模型圖表
+│  └─ predictions/        # 模型預測輸出
+│
+├─ result/                # CV 結果、tuning log、metrics
 │
 ├─ src/
-│  ├─ cleaning/           # 資料清理
-│  ├─ features/           # 特徵工程
-│  ├─ modeling/           # 建模流程
-│  ├─ utils/              # 工具函式（log、paths、IO 等）
-│  ├─ visualization/      # 視覺化繪圖
-│  ├─ __init__.py
+│  ├─ cleaning/           # 資料清理函式
+│  ├─ features/           # 特徵工程 (rolling, log, scaling)
+│  ├─ modeling/           # Baseline, RF, Tuning, SHAP
+│  ├─ utils/              # 工具 (emoji_log, IO, path)
+│  ├─ visualization/      # 圖表繪製
 │  ├─ config.py
 │  ├─ main_cleaning.py
 │  ├─ main_modeling.py
 │  └─ main_visualization.py
 │
-├─ emoji.txt
-├─ poetry.lock
 ├─ pyproject.toml
-├─ .gitignore
+├─ poetry.lock
 └─ README.md
 ```
 
 ---
 
-## 📘 Notebook / Chapter Overview  
+## 📘 Notebook / Chapter Overview
 
-各章節說明與 Notebook 對應關係
+以下為各章節 Notebook 的角色與內容摘要。
 
 ---
 
 ### **Chapter 01 — Data Cleaning Quality Check**  
 
-**Notebook:** `01_data_cleaning_check.ipynb`
+📓 `01_data_cleaning_check.ipynb`
 
-- 檢查原始資料品質  
-- 缺值分佈 / 重複列檢查  
-- 數值範圍是否合理  
-- 日期連續性與格式檢查  
-- 初步相關分析（sanity check）  
-- 產出：clean 版本 processed 檔案＆清理報告
-
----
-
-### **Chapter 02 — Feature Engineering Quality Check**  
-
-**Notebook:** `02_feature_check.ipynb`
-
-- 驗證特徵工程結果  
-- 時間特徵（year/month/day/hour）檢查  
-- 滾動統計（rolling mean / std）檢查  
-- 特徵分佈、離群值、dtype  
-- 特徵與目標變數的關係圖  
-- 產出：確認後的特徵列表＋分析圖表
+- 檢查資料品質（缺值、重複、異常值）
+- 日期格式、測站資料一致性
+- 氣體／微粒污染物範圍 sanity check
+- 初步資料分布與相關分析
+- 產出：**processed 清理後資料**
 
 ---
 
-### **Chapter 03 — Baseline Modeling**  
+### **Chapter 02 — Feature Engineering Verification**  
 
-**Notebook:** `03_baseline_modeling.ipynb`
+📓 `02_feature_check.ipynb`
 
-- 定義 `X` / `y`  
-- 訓練 Linear Regression baseline  
-- 評估 MAE / RMSE / R²  
-- 儲存 baseline 模型與 metrics  
-- 與 Chapter 04 做效能比較基準
+- 檢查 rolling features（3d/7d）
+- log-transform 後的分布變化
+- 特徵與 AQI 的初步關聯（correlation / scatter）
+- 特徵 dtype、缺值、合理性驗證
+- 產出：**最終特徵欄位列表**
+
+---
+
+### **Chapter 03 — Baseline Modeling (Linear Regression)**  
+
+📓 `03_baseline_modeling.ipynb`
+
+- Linear Regression baseline  
+- 訓練 + 評估 (MAE, RMSE, R²)
+- baseline 模型保存（pkl）
+- 作為後續 RF 與 tuning 的比較基準
 
 ---
 
 ### **Chapter 04 — Nonlinear Modeling (Random Forest)**  
 
-**Notebook:** `04_nonlinear_modeling.ipynb`
+📓 `04_nonlinear_modeling.ipynb`
 
-- 建立 Random Forest 回歸模型  
-- 與 baseline 做效能比較  
-- 初步 `feature_importances_` 分析  
-- 視覺化殘差、預測 vs 實際  
-- 釐清 RF 模型的初版效能瓶頸  
-- 為 Chapter 05 的調參做準備
-
----
-
-### **Chapter 05 — Model Optimization & Tuning**  
-
-**Notebook:** `05_model_optimization.ipynb`
-
-- 設計 RF 搜尋空間（n_estimators / max_depth / min_samples_split…）  
-- RandomizedSearchCV：廣域快速搜尋  
-- GridSearchCV：局部精細搜尋  
-- 比較：初版 RF vs RandomSearch RF vs GridSearch RF  
-- 儲存最佳模型（Final Refit）與 metrics  
-- Summary：模型已接近最佳化上限，效能增益有限但穩定
+- Random Forest 回歸模型  
+- 初步 feature_importances_  
+- 預測 vs 實際（散佈圖）  
+- 殘差分析（error distribution）
+- RF 初版效能瓶頸診斷
+- 為 tuning 打基礎
 
 ---
 
-### **(Planned) Chapter 06 — Model Explainability (Feature Importance & SHAP)**  
+### **Chapter 05 — Model Optimization & Hyperparameter Tuning**  
 
-**Notebook（預計）:** `06_model_explainability.ipynb`
+📓 `05_model_optimization.ipynb`
 
-- 使用最佳 RF 模型做特徵重要性分析  
-- 建立 SHAP TreeExplainer  
-- SHAP Summary Plot（Global）  
-- SHAP Dependence Plot（Interactions）  
-- 找出影響空氣品質最關鍵的環境因子  
-- 把模型結果連結到真實環境情境（風向、溫度、污染物濃度等）
+- RandomizedSearchCV：大範圍快速搜尋  
+- GridSearchCV（subsample=0.3）提升 3–5 倍速度  
+- 動態搜尋空間（依 RandomSearch 最佳參數縮小）
+- 比較：初版 RF vs RandomSearch RF vs GridSearch RF
+- Final model：最佳參數 + 全資料訓練
+- 輸出：**最佳模型、metrics、CV 結果**
 
 ---
 
-## 🧪 Field Summary）
+### **Chapter 06 — Model Explainability (SHAP Analysis)**  
+
+📓 `06_model_explainability_shap_analysis.ipynb`
+
+- SHAP TreeExplainer on Final RF  
+- **SHAP Summary Plot**（全域特徵重要性）  
+- **SHAP Bar Plot**（平均貢獻度）  
+- **SHAP Dependence Plot**：分析特徵影響方向  
+  - 例：pm2.5 ↑ → SHAP ↑ → AQI ↑  
+- 單筆預測的 force/waterfall plot  
+- 找出模型真正依賴的特徵  
+- 將 SHAP 結果連結到環境領域知識（大氣科學）
+
+---
+
+### **Chapter 07 — Prediction Evaluation & Final Reporting**  
+
+📓 `07_model_prediction_evaluation.ipynb`
+
+- Final model vs Baseline vs RF 初版  
+- y_true vs y_pred（模型擬合度）  
+- 殘差 vs AQI（檢查模型偏差）  
+- 高濃度污染事件的預測能力  
+- MAE / RMSE / R² 總結  
+- 實務洞察：  
+  - 一般污染情況預測穩定  
+  - 高污染尖峰事件仍具有挑戰  
+- 產出：最終模型報告、重要圖表、預測結果
+
+---
+
+## 🧪 Field Summary
 
 | Field | Description |
 |-------|-------------|
@@ -157,6 +171,179 @@ Data cleaning, feature engineering, modeling and visualization on the Taiwan air
 | `longitude`, `latitude` | GPS |
 | `siteid` | 測站 ID |
 
-後續會加入更多特徵（時間特徵、滾動統計、交互項等）。
+## 📝 Future Work (Planning)
+
+- LightGBM / CatBoost / XGBoost
+
+- 空氣品質時序模型（LSTM、Prophet）
+
+- 特徵交互項（例如風向 × PM2.5）
+
+- 使用 SHAP 反向改善特徵工程
+
+- 模型部署（Streamlit）
+
+- Geo-spatial Mapping（AQI 地圖熱點分析）
 
 ---
+
+## 🧩 Full ML Workflow Architecture
+
+```mermaid
+flowchart TD
+
+%% ============================
+%% COLOR THEMES
+%% ============================
+classDef cleaning fill:#BBDEFB,stroke:#0D47A1,stroke-width:1px,color:#0D47A1
+classDef fe fill:#DCEDC8,stroke:#33691E,stroke-width:1px,color:#1B5E20
+classDef modeling fill:#FFE0B2,stroke:#E65100,stroke-width:1px,color:#E65100
+classDef shap fill:#F8BBD0,stroke:#AD1457,stroke-width:1px,color:#880E4F
+classDef eval fill:#D1C4E9,stroke:#4527A0,stroke-width:1px,color:#311B92
+classDef save fill:#CFD8DC,stroke:#37474F,stroke-width:1px,color:#263238
+
+%% ============================
+%% NODES
+%% ============================
+
+A["Raw Air Quality Data<br>CSV 2016–2024"]
+
+%% Cleaning Group
+subgraph CLEANING[Data Cleaning]
+    B1["Data Cleaning Step"]
+    B2["Remove Invalid Rows<br>Null / Duplicates"]
+    B3["Datetime Parsing<br>& Sorting"]
+end
+
+%% Feature Engineering Group
+subgraph FE[Feature Engineering]
+    C1["Start Feature Engineering"]
+    C2["Outlier Handling<br>Clip · IQR"]
+    C3["Rolling Features<br>3-day · 7-day"]
+    C4["Log Transform<br>log1p"]
+    D1["Feature Selection<br>Build X, y"]
+    D2["Train/Test Split<br>80/20"]
+    D3["Scaling<br>StandardScaler (train-only)"]
+end
+
+%% Modeling Group
+subgraph MODELING[Modeling & Tuning]
+    E1["Baseline Model<br>Linear Regression"]
+    E2["Random Forest Model"]
+    E3["Hyperparameter Tuning<br>RandomSearch + GridSearch"]
+    E4["Final RF Model"]
+end
+
+%% SHAP Group
+subgraph SHAP[Model Explainability]
+    F1["SHAP Values<br>TreeExplainer"]
+    F2["SHAP Summary<br>Dependence · Force"]
+end
+
+%% Evaluation Group
+subgraph EVAL[Prediction Evaluation]
+    G1["Prediction Evaluation"]
+    G2["y_true vs y_pred"]
+    G3["Residual Analysis<br>Error Distribution"]
+    G4["Final Metrics Export"]
+end
+
+H["Save Model & Report<br>pkl · json · figures"]
+
+%% ============================
+%% FLOWS
+%% ============================
+
+A --> B1
+B1 --> B2 --> B3 --> C1
+C1 --> C2 --> C3 --> C4 --> D1 --> D2 --> D3
+
+D3 --> E1 --> E2 --> E3 --> E4
+E4 --> F1 --> F2 --> G1 --> G2 --> G3 --> G4 --> H
+
+%% ============================
+%% CLASS ASSIGNMENTS
+%% ============================
+
+class B1,B2,B3 cleaning
+class C1,C2,C3,C4,D1,D2,D3 fe
+class E1,E2,E3,E4 modeling
+class F1,F2 shap
+class G1,G2,G3,G4 eval
+class H save
+```
+
+```mermaid
+flowchart LR
+
+%% ============================
+%% COLOR THEMES
+%% ============================
+classDef cleaning fill:#BBDEFB,stroke:#0D47A1,stroke-width:1px,color:#0D47A1
+classDef fe fill:#DCEDC8,stroke:#33691E,stroke-width:1px,color:#1B5E20
+classDef modeling fill:#FFE0B2,stroke:#E65100,stroke-width:1px,color:#E65100
+classDef shap fill:#F8BBD0,stroke:#AD1457,stroke-width:1px,color:#880E4F
+classDef eval fill:#D1C4E9,stroke:#4527A0,stroke-width:1px,color:#311B92
+classDef save fill:#CFD8DC,stroke:#37474F,stroke-width:1px,color:#263238
+
+%% ============================
+%% NODES
+%% ============================
+
+A["Raw Air Quality Data<br>CSV 2016–2024"]
+
+subgraph CLEANING[Data Cleaning]
+    B1["Data Cleaning Step"]
+    B2["Remove Invalid Rows<br>Null / 重複"]
+    B3["Datetime Parsing<br>& Sorting"]
+end
+
+subgraph FE[Feature Engineering]
+    C1["Start FE"]
+    C2["Clip · IQR<br>Outlier Handling"]
+    C3["Rolling Features<br>3-day · 7-day"]
+    C4["Log Transform<br>log1p"]
+    D1["Feature Selection<br>Build X, y"]
+    D2["Train/Test Split<br>80/20"]
+    D3["Scaling<br>StandardScaler (train-only)"]
+end
+
+subgraph MODELING[Modeling & Tuning]
+    E1["Baseline<br>Linear Regression"]
+    E2["Random Forest"]
+    E3["Hyperparameter Tuning<br>RandomSearch + GridSearch"]
+    E4["Final RF Model"]
+end
+
+subgraph SHAP[Model Explainability]
+    F1["SHAP Values"]
+    F2["SHAP Summary<br>Dependence · Force"]
+end
+
+subgraph EVAL[Prediction Evaluation]
+    G1["Evaluation"]
+    G2["y_true vs y_pred"]
+    G3["Residual Analysis"]
+    G4["Final Metrics Export"]
+end
+
+H["Save Model & Report<br>pkl · json · figures"]
+
+%% ============================
+%% FLOWS
+%% ============================
+
+A --> B1 --> B2 --> B3 --> C1
+C1 --> C2 --> C3 --> C4 --> D1 --> D2 --> D3
+D3 --> E1 --> E2 --> E3 --> E4
+E4 --> F1 --> F2 --> G1 --> G2 --> G3 --> G4 --> H
+
+%% ============================
+%% CLASS ASSIGNMENTS
+%% ============================
+class B1,B2,B3 cleaning
+class C1,C2,C3,C4,D1,D2,D3 fe
+class E1,E2,E3,E4 modeling
+class F1,F2 shap
+class G1,G2,G3,G4 eval
+class H save
