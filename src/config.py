@@ -16,6 +16,7 @@ PREDICTION_DIR = OUTPUT_DIR / "predictions"
 # === Visualization Settings ===
 FIG_SIZE = (12, 8)
 FONT_SIZE = 14
+TITLE_FONT_SIZE = 18
 COLOR_PALETTE = ["#2E86AB", "#F6C85F", "#6FB07F", "#9B6A6C"]
 
 # === Other constants ===
