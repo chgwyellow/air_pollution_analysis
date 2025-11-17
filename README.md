@@ -193,14 +193,14 @@ A complete end-to-end machine learning project including **data cleaning**,
 flowchart TD
 
 %% ============================
-%% COLOR THEMES
+%% COLOR THEMES + ROUNDED CORNERS
 %% ============================
-classDef cleaning fill:#BBDEFB,stroke:#0D47A1,stroke-width:1px,color:#0D47A1
-classDef fe fill:#DCEDC8,stroke:#33691E,stroke-width:1px,color:#1B5E20
-classDef modeling fill:#FFE0B2,stroke:#E65100,stroke-width:1px,color:#E65100
-classDef shap fill:#F8BBD0,stroke:#AD1457,stroke-width:1px,color:#880E4F
-classDef eval fill:#D1C4E9,stroke:#4527A0,stroke-width:1px,color:#311B92
-classDef save fill:#CFD8DC,stroke:#37474F,stroke-width:1px,color:#263238
+classDef cleaning fill:#BBDEFB,stroke:#0D47A1,stroke-width:1px,color:#0D47A1,rx:10,ry:10
+classDef fe fill:#DCEDC8,stroke:#33691E,stroke-width:1px,color:#1B5E20,rx:10,ry:10
+classDef modeling fill:#FFE0B2,stroke:#E65100,stroke-width:1px,color:#E65100,rx:10,ry:10
+classDef shap fill:#F8BBD0,stroke:#AD1457,stroke-width:1px,color:#880E4F,rx:10,ry:10
+classDef eval fill:#D1C4E9,stroke:#4527A0,stroke-width:1px,color:#311B92,rx:10,ry:10
+classDef save fill:#CFD8DC,stroke:#37474F,stroke-width:1px,color:#263238,rx:10,ry:10
 
 %% ============================
 %% NODES
@@ -265,82 +265,6 @@ E4 --> F1 --> F2 --> G1 --> G2 --> G3 --> G4 --> H
 %% CLASS ASSIGNMENTS
 %% ============================
 
-class B1,B2,B3 cleaning
-class C1,C2,C3,C4,D1,D2,D3 fe
-class E1,E2,E3,E4 modeling
-class F1,F2 shap
-class G1,G2,G3,G4 eval
-class H save
-```
-
-```mermaid
-flowchart LR
-
-%% ============================
-%% COLOR THEMES
-%% ============================
-classDef cleaning fill:#BBDEFB,stroke:#0D47A1,stroke-width:1px,color:#0D47A1
-classDef fe fill:#DCEDC8,stroke:#33691E,stroke-width:1px,color:#1B5E20
-classDef modeling fill:#FFE0B2,stroke:#E65100,stroke-width:1px,color:#E65100
-classDef shap fill:#F8BBD0,stroke:#AD1457,stroke-width:1px,color:#880E4F
-classDef eval fill:#D1C4E9,stroke:#4527A0,stroke-width:1px,color:#311B92
-classDef save fill:#CFD8DC,stroke:#37474F,stroke-width:1px,color:#263238
-
-%% ============================
-%% NODES
-%% ============================
-
-A["Raw Air Quality Data<br>CSV 2016–2024"]
-
-subgraph CLEANING[Data Cleaning]
-    B1["Data Cleaning Step"]
-    B2["Remove Invalid Rows<br>Null / 重複"]
-    B3["Datetime Parsing<br>& Sorting"]
-end
-
-subgraph FE[Feature Engineering]
-    C1["Start FE"]
-    C2["Clip · IQR<br>Outlier Handling"]
-    C3["Rolling Features<br>3-day · 7-day"]
-    C4["Log Transform<br>log1p"]
-    D1["Feature Selection<br>Build X, y"]
-    D2["Train/Test Split<br>80/20"]
-    D3["Scaling<br>StandardScaler (train-only)"]
-end
-
-subgraph MODELING[Modeling & Tuning]
-    E1["Baseline<br>Linear Regression"]
-    E2["Random Forest"]
-    E3["Hyperparameter Tuning<br>RandomSearch + GridSearch"]
-    E4["Final RF Model"]
-end
-
-subgraph SHAP[Model Explainability]
-    F1["SHAP Values"]
-    F2["SHAP Summary<br>Dependence · Force"]
-end
-
-subgraph EVAL[Prediction Evaluation]
-    G1["Evaluation"]
-    G2["y_true vs y_pred"]
-    G3["Residual Analysis"]
-    G4["Final Metrics Export"]
-end
-
-H["Save Model & Report<br>pkl · json · figures"]
-
-%% ============================
-%% FLOWS
-%% ============================
-
-A --> B1 --> B2 --> B3 --> C1
-C1 --> C2 --> C3 --> C4 --> D1 --> D2 --> D3
-D3 --> E1 --> E2 --> E3 --> E4
-E4 --> F1 --> F2 --> G1 --> G2 --> G3 --> G4 --> H
-
-%% ============================
-%% CLASS ASSIGNMENTS
-%% ============================
 class B1,B2,B3 cleaning
 class C1,C2,C3,C4,D1,D2,D3 fe
 class E1,E2,E3,E4 modeling
