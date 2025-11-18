@@ -97,6 +97,7 @@ python src/main_visualization.py
 ## 🧰 VSCode Dev Container (Recommended)
 
 Best development experience.
+
 Automatically sets up Python 3.13 + Poetry + Jupyter inside Docker.
 
 Steps
