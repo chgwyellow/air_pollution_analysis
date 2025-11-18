@@ -1,11 +1,44 @@
+<p align="center">
+  <img src="banner.svg" width="100%" />
+</p>
+
 # 🚀 Taiwan Air Pollution ML Project (2016–2024)
 
 📊 End-to-End Machine Learning Pipeline for Air Quality Modeling
 
 Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • Docker • Dev Container
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" />
+  <img src="https://img.shields.io/badge/Poetry-1.8+-6A5ACD?logo=poetry" />
+  <img src="https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/Scikit--Learn-1.7+-F7931E?logo=scikitlearn&logoColor=white" />
+  <img src="https://img.shields.io/badge/License-MIT-green" />
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/github/stars/<chgwyellow>/air_pollution?style=flat-square" />
+  <img src="https://img.shields.io/github/issues/chgwyellow>/air_pollution?style=flat-square" />
+  <img src="https://img.shields.io/github/last-commit/<chgwyellow>/air_pollution?style=flat-square" />
+  <img src="https://img.shields.io/github/repo-size/<chgwyellow>/air_pollution?style=flat-square" />
+</p>
+
 ---
-<p align="center"> <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" /> <img src="https://img.shields.io/badge/Poetry-1.8+-6A5ACD?logo=poetry" /> <img src="https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white" /> <img src="https://img.shields.io/badge/Scikit--Learn-1.7+-F7931E?logo=scikitlearn&logoColor=white" /> <img src="https://img.shields.io/badge/License-MIT-green" /> </p>
+
+# 📑 Table of Contents
+
+- [Overview](#overview)
+- [Data Source](#-data-source)
+- [Docker Support](#-docker-support-python-313)
+- [VSCode Dev Container](#-vscode-dev-container-recommended)
+- [Mounted Folders](#-mounted-folders)
+- [Project Layout](#-project-layout)
+- [Notebook / Chapter Overview](#-notebook--chapter-overview)
+- [Field Summary](#-field-summary)
+- [Future Work](#-future-work-planning)
+- [ML Workflow Architecture](#-full-ml-workflow-architecture)
+- [License](#-license)
+
 ---
 
 ## Overview
@@ -67,7 +100,6 @@ Automatically sets up Python 3.13 + Poetry + Jupyter inside Docker.
 Steps
 
 1. Install VSCode extension:
-    
     Dev Containers
 
 2. Run:
@@ -87,8 +119,6 @@ Ctrl + Shift + P → Dev Containers: Reopen in Container
    - configure Python environment
 
 Now you can run any .py or notebook directly inside the container.
-
----
 
 ### 📂 Mounted Folders
 
@@ -152,8 +182,6 @@ Now you can run any .py or notebook directly inside the container.
 ## 📘 Notebook / Chapter Overview
 
 以下為各章節 Notebook 的角色與內容摘要。
-
----
 
 ### **Chapter 01 — Data Cleaning Quality Check**  
 
@@ -362,3 +390,10 @@ class E1,E2,E3,E4 modeling
 class F1,F2 shap
 class G1,G2,G3,G4 eval
 class H save
+```
+
+---
+
+## 📜 License
+
+MIT License (free to use & modify)
