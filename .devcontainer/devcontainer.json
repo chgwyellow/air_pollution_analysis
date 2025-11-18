@@ -1,0 +1,32 @@
+{
+  "name": "Air Pollution ML Project (Python 3.13)",
+  "dockerFile": "Dockerfile",
+  "context": "..",
+
+  "workspaceFolder": "/app",
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.pythonPath": "/usr/local/bin/python",
+        "python.analysis.extraPaths": ["./src"]
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-toolsai.jupyter",
+        "ms-toolsai.jupyter-keymap",
+        "ms-toolsai.jupyter-renderers"
+      ]
+    }
+  },
+
+  "postStartCommand": "poetry install --no-root",
+
+  "mounts": ["source=${localWorkspaceFolder},target=/app,type=bind"],
+
+  "remoteEnv": {
+    "POETRY_VIRTUALENVS_CREATE": "false"
+  }
+}
