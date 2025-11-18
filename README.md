@@ -9,14 +9,16 @@
 Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • Docker • Dev Container
 
 <p align="center">
+  <!-- Environment / Tooling -->
   <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" />
   <img src="https://img.shields.io/badge/Poetry-1.8+-6A5ACD?logo=poetry" />
   <img src="https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white" />
+  <img src="https://img.shields.io/badge/Jupyter-Supported-f37726?logo=jupyter" />
   <img src="https://img.shields.io/badge/Scikit--Learn-1.7+-F7931E?logo=scikitlearn&logoColor=white" />
+  <img src="https://img.shields.io/badge/Explainability-SHAP-ff69b4" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
-</p>
 
-<p align="center">
+  <!-- Repo Info -->
   <img src="https://img.shields.io/github/stars/chgwyellow/air_pollution_analysis?style=flat-square" />
   <img src="https://img.shields.io/github/issues/chgwyellow/air_pollution_analysis?style=flat-square" />
   <img src="https://img.shields.io/github/last-commit/chgwyellow/air_pollution_analysis?style=flat-square" />
