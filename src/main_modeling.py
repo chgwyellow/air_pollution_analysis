@@ -116,4 +116,4 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
 
 
 if __name__ == "__main__":
-    run_model_pipeline("Taiwan", model_type="rf")
+    run_model_pipeline("Taiwan")
