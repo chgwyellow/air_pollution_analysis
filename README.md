@@ -1,42 +1,104 @@
-# 🇹🇼 Taiwan Air Pollution Analysis (2016–2024)
+# 🚀 Taiwan Air Pollution ML Project (2016–2024)
 
-A complete end-to-end machine learning project including **data cleaning**,  
-**feature engineering**, **modeling**, **hyperparameter tuning**,  
-**explainability (SHAP)**, and **prediction evaluation** using Taiwan’s 2016–2024 air quality dataset.
+📊 End-to-End Machine Learning Pipeline for Air Quality Modeling
 
-使用台灣空氣品質資料（2016–2024）完成 **資料清理**、**特徵工程**、**模型建立**、**模型調校**、**特徵重要性分析（SHAP）** 與 **模型評估** 的完整專案。
+Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • Docker • Dev Container
 
 ---
+<p align="center"> <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" /> <img src="https://img.shields.io/badge/Poetry-1.8+-6A5ACD?logo=poetry" /> <img src="https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white" /> <img src="https://img.shields.io/badge/Scikit--Learn-1.7+-F7931E?logo=scikitlearn&logoColor=white" /> <img src="https://img.shields.io/badge/License-MIT-green" /> </p>
+---
 
-## 📂 Data Source 資料來源
+## Overview
+
+This project provides a full machine-learning workflow to analyze Taiwan’s air quality data (2016–2024):
+
+✔ Data cleaning
+
+✔ Feature engineering (rolling windows, log transforms, scaling)
+
+✔ Baseline & nonlinear models
+
+✔ Hyperparameter tuning (RandomSearch + GridSearch)
+
+✔ Model explainability (SHAP TreeExplainer)
+
+✔ Evaluation & visualization
+
+✔ Reproducible environment via Docker + Dev Container
+
+## 📂 Data Source
 
 - Dataset: **"Taiwan Air Quality Data (2016–2024)"** from Kaggle  
 - Download and place the CSV at: `data/raw/air_quality.csv`  
 
 ---
 
-## 🐳 Docker Support — Reproducible Environment (Python 3.13)
+## 🐳 Docker Support (Python 3.13)
 
-本專案提供 Docker 開發環境，讓使用者在任意電腦上取得完全一致的 Python 3.13 + Poetry + ML 套件環境。
-使用 Docker 後，你可以直接在 VSCode 或其他 IDE 中執行 .py 檔案，而不需要手動安裝任何套件。
+The project supports Docker to guarantee a reproducible, isolated, and dependency-consistent ML environment.
 
-### 1. VS Code Dev Container (Recommendation)
+### 🔧 1. Build Image
 
-Install Dev Container extension in VS Code, then run:
+```nginx
+docker build -t air_pollution .
+```
+
+### 🔧 2. Start a Development Shell
+
+```ruby
+docker run -it \
+  -v $(pwd):/app \
+  air_pollution bash
+```
+
+You can now run:
+
+```bash
+python src/main_cleaning.py
+python src/main_modeling.py
+python src/main_visualization.py
+```
+
+## 🧰 VSCode Dev Container (Recommended)
+
+Best development experience.
+Automatically sets up Python 3.13 + Poetry + Jupyter inside Docker.
+
+Steps
+
+1. Install VSCode extension:
+    
+    Dev Containers
+
+2. Run:
 
 ```css
 Ctrl + Shift + P → Dev Containers: Reopen in Container
 ```
 
-### 📂 Mounted Folders
+3. VSCode will automatically:
 
-| Local Folder | Container Path | Description                         |
-| ------------ | -------------- | ----------------------------------- |
-| `.` (All Project)   | `/app`         | Source code + data + models 全部會掛進容器 |
+   - build image
+
+   - mount your workspace
+
+   - install Poetry dependencies
+
+   - configure Python environment
+
+Now you can run any .py or notebook directly inside the container.
 
 ---
 
-## 📁 Project Layout 專案結構
+### 📂 Mounted Folders
+
+| Local Folder      | Container Path | Description                                |
+| ----------------- | -------------- | ------------------------------------------ |
+| `.` (All Project) | `/app`         | Source code + data + models 全部會掛進容器 |
+
+---
+
+## 📁 Project Layout
 
 ```text
 .
@@ -187,18 +249,18 @@ Ctrl + Shift + P → Dev Containers: Reopen in Container
 
 ## 🧪 Field Summary
 
-| Field | Description |
-|-------|-------------|
-| `date` | 日期時間 |
-| `sitename` | 測站名稱 |
-| `county` | 縣市 |
-| `aqi` | 空氣品質指標 |
-| `pollutant` | 主要污染物 |
-| `so2`, `co`, `o3`, `o3_8hr` | 氣體污染物 |
-| `pm10`, `pm2.5` | 懸浮微粒濃度 |
-| `windspeed`, `winddirec` | 風速／風向 |
-| `longitude`, `latitude` | GPS |
-| `siteid` | 測站 ID |
+| Field                       | Description  |
+| --------------------------- | ------------ |
+| `date`                      | 日期時間     |
+| `sitename`                  | 測站名稱     |
+| `county`                    | 縣市         |
+| `aqi`                       | 空氣品質指標 |
+| `pollutant`                 | 主要污染物   |
+| `so2`, `co`, `o3`, `o3_8hr` | 氣體污染物   |
+| `pm10`, `pm2.5`             | 懸浮微粒濃度 |
+| `windspeed`, `winddirec`    | 風速／風向   |
+| `longitude`, `latitude`     | GPS          |
+| `siteid`                    | 測站 ID      |
 
 ## 📝 Future Work (Planning)
 
