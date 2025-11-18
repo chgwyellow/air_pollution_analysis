@@ -17,10 +17,10 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/github/stars/<chgwyellow>/air_pollution?style=flat-square" />
-  <img src="https://img.shields.io/github/issues/chgwyellow>/air_pollution?style=flat-square" />
-  <img src="https://img.shields.io/github/last-commit/<chgwyellow>/air_pollution?style=flat-square" />
-  <img src="https://img.shields.io/github/repo-size/<chgwyellow>/air_pollution?style=flat-square" />
+  <img src="https://img.shields.io/github/stars/chgwyellow/air_pollution_analysis?style=flat-square" />
+  <img src="https://img.shields.io/github/issues/chgwyellow/air_pollution_analysis?style=flat-square" />
+  <img src="https://img.shields.io/github/last-commit/chgwyellow/air_pollution_analysis?style=flat-square" />
+  <img src="https://img.shields.io/github/repo-size/chgwyellow/air_pollution_analysis?style=flat-square" />
 </p>
 
 ---
