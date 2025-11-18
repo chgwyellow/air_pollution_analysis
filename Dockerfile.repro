@@ -1,0 +1,40 @@
+# ===============================
+# Taiwan Air Pollution Replication Environment
+# Jupyter + Python 3.13 + Required ML Libraries
+# ===============================
+
+FROM python:3.13-slim
+
+# System deps (for numpy/pandas/scipy/sklearn/shap)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    build-essential \
+    gfortran \
+    liblapack-dev \
+    libopenblas-dev \
+    libgomp1 \
+    git \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set workspace
+WORKDIR /app
+
+# Copy only dependencies first
+COPY pyproject.toml poetry.lock ./
+
+# Install Poetry
+RUN pip install --no-cache-dir poetry
+
+# Install dependencies (no-root)
+RUN poetry config virtualenvs.create false \
+    && poetry install --no-interaction --no-ansi --no-root
+
+# Copy notebooks + src
+COPY notebook/ ./notebook
+COPY src/ ./src
+
+# Expose Jupyter port
+EXPOSE 8888
+
+# Launch Jupyter automatically
+CMD ["jupyter", "lab", "--ip=0.0.0.0", "--no-browser", "--allow-root"]

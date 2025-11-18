@@ -34,6 +34,7 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
 - [Docker Support](#-docker-support-python-313)
 - [VSCode Dev Container](#-vscode-dev-container-recommended)
 - [Mounted Folders](#-mounted-folders)
+- [Environment Replication](#-environment-replication-reproducible-jupyter-environment)
 - [Project Layout](#-project-layout)
 - [Notebook / Chapter Overview](#-notebook--chapter-overview)
 - [Field Summary](#-field-summary)
@@ -100,26 +101,25 @@ Best development experience.
 
 Automatically sets up Python 3.13 + Poetry + Jupyter inside Docker.
 
-Steps
+### 🔧 1. Install VSCode extension
 
-1. Install VSCode extension:
-    Dev Containers
+Dev Containers
 
-2. Run:
+### 🔧 2. Run
 
 ```css
 Ctrl + Shift + P → Dev Containers: Reopen in Container
 ```
 
-3. VSCode will automatically:
+### 3. VSCode will automatically
 
-   - build image
+- build image
 
-   - mount your workspace
+- mount your workspace
 
-   - install Poetry dependencies
+- install Poetry dependencies
 
-   - configure Python environment
+- configure Python environment
 
 Now you can run any .py or notebook directly inside the container.
 
@@ -128,6 +128,28 @@ Now you can run any .py or notebook directly inside the container.
 | Local Folder      | Container Path | Description                                |
 | ----------------- | -------------- | ------------------------------------------ |
 | `.` (All Project) | `/app`         | Source code + data + models 全部會掛進容器 |
+
+## 🧪 Environment Replication (Reproducible Jupyter Environment)
+
+### 🔧 1. Build Replication Image
+
+```bash
+docker build -f Dockerfile.repro -t air_pollution_repro .
+```
+
+### 🔧 2. Start Jupyter Lab for Notebook Reproduction
+
+```bash
+docker run -p 8888:8888 air_pollution_repro
+```
+
+You will see:
+
+```ruby
+http://127.0.0.1:8888/?token=xxxxxxxx
+```
+
+Click link to continue.
 
 ---
 
