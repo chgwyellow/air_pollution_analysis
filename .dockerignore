@@ -1,0 +1,27 @@
+# Ignore unnecessary files to reduce image size
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Virtual environments
+.venv/
+venv/
+
+# Notebooks output
+.ipynb_checkpoints
+
+# Large folders (mounted as volume instead)
+data/raw/*
+output/*
+models/*
+result/*
+
+# Git
+.git/
+.gitignore
+
+# OS / editor files
+.DS_Store
+Thumbs.db

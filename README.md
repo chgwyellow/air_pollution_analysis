@@ -15,6 +15,52 @@ A complete end-to-end machine learning project including **data cleaning**,
 
 ---
 
+## 🐳 Docker Support — Reproducible Environment (Python 3.13)
+
+本專案提供 Docker 開發環境，讓使用者在任意電腦上取得完全一致的 Python 3.13 + Poetry + ML 套件環境。
+使用 Docker 後，你可以直接在 VSCode 或其他 IDE 中執行 .py 檔案，而不需要手動安裝任何套件。
+
+### 1. Build Docker Image
+
+```bash
+docker build -t air_pollution .
+```
+
+### 2. Start a Development Container
+
+Enter container and get terminal
+
+```bash
+docker run -it \
+  -v $(pwd):/app \
+  air_pollution \
+  bash
+```
+
+In container
+
+```bash
+python src/main_cleaning.py
+python src/main_modeling.py
+python src/main_visualization.py
+```
+
+### 3. VS Code Dev Container (Recommendation)
+
+Install Dev Container extension in VS Code
+
+```yaml
+Command Palette → Dev Containers: Reopen in Container
+```
+
+### 📂 Mounted Folders
+
+| Local Folder | Container Path | Description                         |
+| ------------ | -------------- | ----------------------------------- |
+| `.` (All Project)   | `/app`         | Source code + data + models 全部會掛進容器 |
+
+---
+
 ## 📁 Project Layout 專案結構
 
 ```text
@@ -24,6 +70,9 @@ A complete end-to-end machine learning project including **data cleaning**,
 │  └─ processed/          # 清理後資料
 │
 ├─ models/                # 訓練後的模型 & scaler
+│  ├─ linear/
+|  ├─ rf/
+|  ├─ rf_tuned/
 │
 ├─ notebook/              # Jupyter Notebook 分章呈現
 │  ├─ 01_data_cleaning_check.ipynb
@@ -36,6 +85,9 @@ A complete end-to-end machine learning project including **data cleaning**,
 │
 ├─ output/
 │  ├─ figures/            # SHAP / EDA / 模型圖表
+|     ├─ linear/
+|     ├─ rf/
+|     ├─ rf_tuned/
 │  └─ predictions/        # 模型預測輸出
 │
 ├─ result/                # CV 結果、tuning log、metrics
@@ -53,6 +105,8 @@ A complete end-to-end machine learning project including **data cleaning**,
 │
 ├─ pyproject.toml
 ├─ poetry.lock
+├─ Dockerfile
+├─ .dockerignore
 └─ README.md
 ```
 
