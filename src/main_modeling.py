@@ -41,7 +41,7 @@ from src.modeling.train_baseline import (
 from src.utils.emoji_log import done, error
 
 
-def run_model_pipeline(filename: str, model_type: str = "linear"):
+def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.5):
     """
     Run the complete model training pipeline.
 
@@ -53,6 +53,7 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
         Choose the model registered in MODEL_REGISTRY:
             - "linear"   → Baseline Linear Regression
             - "rf"       → Default Random Forest
+            - "rf_best"  → Best Random Forest
             - "rf_tuned" → Tuned Random Forest (RandomSearch + GridSearch)
 
     Returns
@@ -65,21 +66,24 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
     # === 1. Load cleaned data ===
     df = load_cleaned_data(filename)
 
+    if sample_frac < 1:
+        df = df.sample(frac=sample_frac, random_state=42)
+
     # === 2. Feature Engineering Pipeline ===
     # Step 1: Clip pollutants to reasonable range
-    df_clip = clip_pollutants(df.copy())
+    df = clip_pollutants(df)
 
     # Step 2: Reduce extreme outliers using IQR clipping
-    df_iqr = handle_outliers_iqr(df_clip)
+    df = handle_outliers_iqr(df)
 
     # Step 3: Add rolling mean features (3-day, 7-day)
-    df_rolling = add_rolling_features(df_iqr)
+    df = add_rolling_features(df)
 
     # Step 4: Log-transform skewed pollutants
-    df_log = log_transform_features(df_rolling)
+    df = log_transform_features(df)
 
     # === 3. Feature selection & scaling ===
-    X, y = build_features(df_log)
+    X, y = build_features(df)
 
     # Save the training dataset used for visualization
     df_training_clean = pd.concat([X, y], axis=1)
@@ -116,4 +120,4 @@ def run_model_pipeline(filename: str, model_type: str = "linear"):
 
 
 if __name__ == "__main__":
-    run_model_pipeline("Taiwan")
+    run_model_pipeline("Taiwan", model_type="rf")

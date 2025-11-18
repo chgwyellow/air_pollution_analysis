@@ -124,6 +124,8 @@ def log_transform_features(df, cols=None):
             df[c] = df[c].clip(lower=0)
             df[c] = np.log1p(df[c])  # log(1+x) to avoid log(0)
 
+    df[numeric_cols] = df[numeric_cols].astype("float32")
+
     success("Pollutants skewes has been smoothed.")
     return df
 
