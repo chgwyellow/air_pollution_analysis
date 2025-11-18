@@ -5,6 +5,9 @@ The process of adjusting the RandomizedSearchCV and GridSearchCV hyperparameter
 import numpy as np
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.model_selection import HalvingRandomSearchCV, HalvingGridSearchCV
+
 
 from src.modeling.search_space import (
     get_rf_grid_params,
@@ -14,24 +17,24 @@ from src.modeling.search_space import (
 from src.utils.emoji_log import info, success
 
 
-def run_random_search(X_train, y_train, cv=3, n_iter=20, random_state=42):
-    """Run RandomizedSearch for Random Forest."""
+def run_random_search(X_train, y_train, cv=3, factor=3, random_state=42):
+    """Run Halving Random Search for Random Forest."""
     rf = RandomForestRegressor(n_jobs=-1, random_state=random_state)
 
-    search = RandomizedSearchCV(
+    search = HalvingRandomSearchCV(
         estimator=rf,
         param_distributions=get_rf_random_params(),
-        n_iter=n_iter,
         cv=cv,
+        factor=factor,
         scoring="neg_mean_absolute_error",
         n_jobs=-1,
-        verbose=1,
         random_state=random_state,
+        verbose=1,
     )
 
     search.fit(X_train, y_train)
 
-    success(f"[Random Search] Best params: {search.best_params_}")
+    success(f"[Halving Random Search] Best params: {search.best_params_}")
     return (search.best_estimator_, search.best_params_, search.cv_results_)
 
 
@@ -42,12 +45,10 @@ def run_grid_search(
     cv=3,
     sample_ratio=0.3,
     dynamic_grid=True,
+    factor=3
 ):
     """
-    Run GridSearch for fine-tuning.
-
-    sample_ratio: reduce training time by sampling training data
-    dynamic_grid: shrink grid search space around random-search best params
+    Halving Grid Search (fine tuning).
     """
     # 1) Subsample training data
     if sample_ratio < 1.0:
@@ -64,7 +65,7 @@ def run_grid_search(
         X_train_small = X_train
         y_train_small = y_train
 
-    # 2) Shrink grid search space based on random search best params
+    # 2) dynamic or static grid
     if dynamic_grid:
         grid = get_rf_grid_params_from_random(base_params)
         info("[Grid Search] Using dynamic grid based on RandomSearch best params.")
@@ -73,16 +74,17 @@ def run_grid_search(
 
     rf = RandomForestRegressor(n_jobs=-1, **base_params)
 
-    search = GridSearchCV(
+    search = HalvingGridSearchCV(
         estimator=rf,
         param_grid=grid,
         cv=cv,
+        factor=factor,
         scoring="neg_mean_absolute_error",
-        n_jobs=-1,
         verbose=1,
+        n_jobs=-1,
     )
 
     search.fit(X_train_small, y_train_small)
 
-    success(f"[Grid Search] Best params: {search.best_params_}")
+    success(f"[Halving Grid Search] Best params: {search.best_params_}")
     return (search.best_estimator_, search.best_params_, search.cv_results_)
