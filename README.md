@@ -129,28 +129,6 @@ Now you can run any .py or notebook directly inside the container.
 | ----------------- | -------------- | ------------------------------------------ |
 | `.` (All Project) | `/app`         | Source code + data + models 全部會掛進容器 |
 
-## 🧪 Environment Replication (Reproducible Jupyter Environment)
-
-### 🔧 1. Build Replication Image
-
-```bash
-docker build -f Dockerfile.repro -t air_pollution_repro .
-```
-
-### 🔧 2. Start Jupyter Lab for Notebook Reproduction
-
-```bash
-docker run -p 8888:8888 air_pollution_repro
-```
-
-You will see:
-
-```ruby
-http://127.0.0.1:8888/?token=xxxxxxxx
-```
-
-Click link to continue.
-
 ---
 
 ## 📁 Project Layout
