@@ -94,4 +94,4 @@ def run_all_visualizations(model_type="linear"):
 
 
 if __name__ == "__main__":
-    run_all_visualizations()
+    run_all_visualizations("rf")
