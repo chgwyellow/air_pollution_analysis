@@ -22,10 +22,10 @@ A complete end-to-end machine learning project including **data cleaning**,
 
 ### 1. VS Code Dev Container (Recommendation)
 
-Install Dev Container extension in VS Code
+Install Dev Container extension in VS Code, then run:
 
-```yaml
-Command Palette → Dev Containers: Reopen in Container
+```css
+Ctrl + Shift + P → Dev Containers: Reopen in Container
 ```
 
 ### 📂 Mounted Folders
