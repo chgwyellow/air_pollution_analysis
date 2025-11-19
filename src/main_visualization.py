@@ -60,15 +60,16 @@ def visualize_model(df, model, model_type, feature_names):
 
 def visualize_shap(df, model, model_type, feature, feature_names):
     """Generate SHAP explainability plots."""
-    X = df[feature_names]
 
     # Detect if model is linear
     if model_type == "linear":
         info("Skipping SHAP for Linear Regression")
         return
 
-    explainer = shap.TreeExplainer(model)
-    shap_values = explainer.shap_values(X)
+    X = shap.sample(df[feature_names], 500, random_state=42)
+
+    explainer = shap.TreeExplainer(model, feature_perturbation="tree_path_dependent")
+    shap_values = explainer.shap_values(X, check_additivity=False)
 
     plot_shap_summary(shap_values, X, f"{model_type}/shap_summary")
     plot_shap_dependence(shap_values, X, feature, f"{model_type}/shap_{feature}")
