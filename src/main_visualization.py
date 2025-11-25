@@ -67,9 +67,12 @@ def visualize_shap(df, model, model_type, feature, feature_names):
         return
 
     X = shap.sample(df[feature_names], 500, random_state=42)
+    scaler = joblib.load(MODEL_DIR / "standard_scaler.pkl")
+    X_scaled = scaler.transform(X)
+    X_scaled = pd.DataFrame(X_scaled, columns=feature_names)
 
     explainer = shap.TreeExplainer(model, feature_perturbation="tree_path_dependent")
-    shap_values = explainer.shap_values(X, check_additivity=False)
+    shap_values = explainer.shap_values(X_scaled, check_additivity=False)
 
     plot_shap_summary(shap_values, X, f"{model_type}/shap_summary")
     plot_shap_dependence(shap_values, X, feature, f"{model_type}/shap_{feature}")
@@ -95,4 +98,4 @@ def run_all_visualizations(model_type="linear"):
 
 
 if __name__ == "__main__":
-    run_all_visualizations("lgbm")
+    run_all_visualizations("rf")

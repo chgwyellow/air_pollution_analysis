@@ -52,7 +52,7 @@ This project provides a full machine-learning workflow to analyze Taiwan’s air
 
 ✔ Feature engineering (rolling windows, log transforms, scaling)
 
-✔ Baseline & nonlinear models
+✔ Baseline & nonlinear models (Linear, Random Forest, LightGBM)
 
 ✔ Hyperparameter tuning (RandomSearch + GridSearch)
 
@@ -278,6 +278,20 @@ Now you can run any .py or notebook directly inside the container.
 
 ---
 
+### **Chapter 08 — Advanced Gradient Boosting (LightGBM)**  
+
+📓 `08_advanced_boosting_lightgbm.ipynb`
+
+- **Memory Optimization**: Implemented Chunking Strategy (CSV → Parquet) to handle 5.8M+ rows on 16GB RAM.
+- **LightGBM Implementation**:
+  - Faster training (~12 mins vs hours for RF)
+  - Better accuracy (RMSE improved by ~18%)
+  - Early Stopping to prevent overfitting
+- **Pipeline Integration**:
+  - Automated efficient data loading
+  - Integrated into `run_model_pipeline`
+- **Result**: Significant performance leap over Random Forest.
+
 ## 🧪 Field Summary
 
 | Field                       | Description  |
@@ -295,7 +309,7 @@ Now you can run any .py or notebook directly inside the container.
 
 ## 📝 Future Work (Planning)
 
-- LightGBM / CatBoost / XGBoost
+- [x] LightGBM (Completed in Ch.8) / CatBoost / XGBoost
 
 - 空氣品質時序模型（LSTM、Prophet）
 
