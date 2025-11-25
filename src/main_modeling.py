@@ -35,10 +35,10 @@ from src.features.feature_engineering import (
 from src.modeling.model_registry import MODEL_REGISTRY
 from src.modeling.train_baseline import (
     build_features,
-    load_cleaned_data,
     split_train_test,
 )
 from src.utils.emoji_log import done, error
+from src.utils.IO_file import convert_csv_to_parquet
 
 
 def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.5):
@@ -63,9 +63,23 @@ def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.
         Evaluation results including MAE, RMSE, R².
     """
 
-    # === 1. Load cleaned data ===
-    df = load_cleaned_data(filename)
+    # === 1. Smart Data Loading (CSV -> Parquet) ===
+    # Define paths
+    csv_path = PROCESSED_DIR / f"{filename}.csv"
+    parquet_path = PROCESSED_DIR / "full_data.parquet"
 
+    # If LightGBM, force full data (because it's fast and memory-friendly)
+    if model_type == "lgbm":
+        sample_frac = 1.0
+
+    # Automatically check and convert
+    if not parquet_path.exists():
+        convert_csv_to_parquet(csv_path, parquet_path)
+
+    # Read Parquet
+    df = pd.read_parquet(parquet_path)
+
+    # Sample (if needed)
     if sample_frac < 1:
         df = df.sample(frac=sample_frac, random_state=42)
 
@@ -120,4 +134,4 @@ def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.
 
 
 if __name__ == "__main__":
-    run_model_pipeline("Taiwan", model_type="rf")
+    run_model_pipeline("Taiwan", model_type="lgbm")
