@@ -190,11 +190,11 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `01_data_cleaning_check.ipynb`
 
-- 檢查資料品質（缺值、重複、異常值）
-- 日期格式、測站資料一致性
-- 氣體／微粒污染物範圍 sanity check
-- 初步資料分布與相關分析
-- 產出：**processed 清理後資料**
+- Data quality inspection (missing values, duplicates, outliers)
+- Date format standardization & station data consistency check
+- Sanity check for pollutant ranges (gas/particulate matter)
+- Preliminary distribution and correlation analysis
+- Output: **Processed cleaned data**
 
 ---
 
@@ -202,11 +202,11 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `02_feature_check.ipynb`
 
-- 檢查 rolling features（3d/7d）
-- log-transform 後的分布變化
-- 特徵與 AQI 的初步關聯（correlation / scatter）
-- 特徵 dtype、缺值、合理性驗證
-- 產出：**最終特徵欄位列表**
+- Verification of rolling features (3-day / 7-day)
+- Distribution changes after log-transformation
+- Preliminary correlation between features and AQI (correlation / scatter plots)
+- Data type, missing value, and rationality checks for features
+- Output: **Final feature column list**
 
 ---
 
@@ -214,10 +214,10 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `03_baseline_modeling.ipynb`
 
-- Linear Regression baseline  
-- 訓練 + 評估 (MAE, RMSE, R²)
-- baseline 模型保存（pkl）
-- 作為後續 RF 與 tuning 的比較基準
+- Linear Regression baseline model
+- Training + Evaluation (MAE, RMSE, R²)
+- Baseline model persistence (pkl)
+- Benchmark for subsequent RF and tuning comparisons
 
 ---
 
@@ -225,12 +225,12 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `04_nonlinear_modeling.ipynb`
 
-- Random Forest 回歸模型  
-- 初步 feature_importances_  
-- 預測 vs 實際（散佈圖）  
-- 殘差分析（error distribution）
-- RF 初版效能瓶頸診斷
-- 為 tuning 打基礎
+- Random Forest Regression model
+- Preliminary feature importance analysis
+- Prediction vs. Actual (Scatter plot)
+- Residual analysis (Error distribution)
+- Diagnosing initial RF performance bottlenecks
+- Foundation for hyperparameter tuning
 
 ---
 
@@ -238,12 +238,12 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `05_model_optimization.ipynb`
 
-- RandomizedSearchCV：大範圍快速搜尋  
-- GridSearchCV（subsample=0.3）提升 3–5 倍速度  
-- 動態搜尋空間（依 RandomSearch 最佳參數縮小）
-- 比較：初版 RF vs RandomSearch RF vs GridSearch RF
-- Final model：最佳參數 + 全資料訓練
-- 輸出：**最佳模型、metrics、CV 結果**
+- RandomizedSearchCV: Fast broad search
+- GridSearchCV (subsample=0.3): 3–5x speedup
+- Dynamic search space (narrowing down based on RandomSearch best params)
+- Comparison: Initial RF vs. RandomSearch RF vs. GridSearch RF
+- Final model: Best parameters + Full data training
+- Output: **Best model, metrics, CV results**
 
 ---
 
@@ -251,14 +251,14 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `06_model_explainability_shap_analysis.ipynb`
 
-- SHAP TreeExplainer on Final RF  
-- **SHAP Summary Plot**（全域特徵重要性）  
-- **SHAP Bar Plot**（平均貢獻度）  
-- **SHAP Dependence Plot**：分析特徵影響方向  
-  - 例：pm2.5 ↑ → SHAP ↑ → AQI ↑  
-- 單筆預測的 force/waterfall plot  
-- 找出模型真正依賴的特徵  
-- 將 SHAP 結果連結到環境領域知識（大氣科學）
+- SHAP TreeExplainer on Final RF
+- **SHAP Summary Plot** (Global feature importance)
+- **SHAP Bar Plot** (Average contribution)
+- **SHAP Dependence Plot**: Analyzing feature impact direction
+  - Example: pm2.5 ↑ → SHAP ↑ → AQI ↑
+- Force/Waterfall plots for individual predictions
+- Identifying features the model truly relies on
+- Linking SHAP results to environmental domain knowledge
 
 ---
 
@@ -266,15 +266,15 @@ Now you can run any .py or notebook directly inside the container.
 
 📓 `07_model_prediction_evaluation.ipynb`
 
-- Final model vs Baseline vs RF 初版  
-- y_true vs y_pred（模型擬合度）  
-- 殘差 vs AQI（檢查模型偏差）  
-- 高濃度污染事件的預測能力  
-- MAE / RMSE / R² 總結  
-- 實務洞察：  
-  - 一般污染情況預測穩定  
-  - 高污染尖峰事件仍具有挑戰  
-- 產出：最終模型報告、重要圖表、預測結果
+- Final model vs. Baseline vs. Initial RF
+- y_true vs. y_pred (Model fit)
+- Residuals vs. AQI (Checking model bias)
+- Prediction capability for high pollution events
+- Summary of MAE / RMSE / R²
+- Practical insights:
+  - Stable predictions for general pollution levels
+  - Challenges remain for peak pollution events
+- Output: Final model report, key charts, prediction results
 
 ---
 
