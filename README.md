@@ -37,6 +37,7 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
 - [Environment Replication](#-environment-replication-reproducible-jupyter-environment)
 - [Project Layout](#-project-layout)
 - [Notebook / Chapter Overview](#-notebook--chapter-overview)
+- [Web Application Deployment](#-web-application-deployment-time-machine)
 - [Field Summary](#-field-summary)
 - [Future Work](#-future-work-planning)
 - [ML Workflow Architecture](#-full-ml-workflow-architecture)
@@ -292,6 +293,27 @@ Now you can run any .py or notebook directly inside the container.
   - Integrated into `run_model_pipeline`
 - **Result**: Significant performance leap over Random Forest.
 
+---
+
+## 🚀 Web Application Deployment (Time Machine)
+
+The project includes a **Streamlit-based Web App** that serves as a "Time Machine" for air quality prediction.
+
+- **Entry Point**: `src/app/app.py`
+- **Key Features**:
+  - **Interactive Interface**: Select any station and historical date (2016-2024).
+  - **Real-time Pipeline**: Performs on-the-fly feature engineering (Rolling, Log, Scaling) using the backend logic.
+  - **Model Inference**: Loads the trained LightGBM model for instant AQI prediction.
+  - **Visualization**: Compares predicted vs. actual AQI and shows historical trends.
+
+**How to Run:**
+
+```bash
+streamlit run src/app/app.py
+```
+
+---
+
 ## 🧪 Field Summary
 
 | Field                       | Description  |
@@ -317,7 +339,7 @@ Now you can run any .py or notebook directly inside the container.
 
 - 使用 SHAP 反向改善特徵工程
 
-- 模型部署（Streamlit）
+- [x] 模型部署（Streamlit）
 
 - Geo-spatial Mapping（AQI 地圖熱點分析）
 
