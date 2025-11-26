@@ -34,8 +34,9 @@ def get_station_data(df, sitename, target_date, lookback_days=7):
     Filter data for a specific station and a date range (target_date - lookback).
     """
 
-    start_date = target_date - pd.Timedelta(days=lookback_days)
+    # Ensure `target_date` is a pandas Timestamp before arithmetic
     end_date = pd.to_datetime(target_date)
+    start_date = end_date - pd.Timedelta(days=lookback_days)
 
     # Filter by station
     station_df = df[df["sitename"] == sitename].copy()
@@ -58,6 +59,7 @@ def process_and_predict(input_df, model):
     df = handle_outliers_iqr(df)
     df = log_transform_features(df)
     df = add_rolling_features(df)
+    df = df.drop(columns=["date", "county", "sitename", "status", "aqi", "season"])
 
     # Scaling
     scaler = joblib.load(MODEL_DIR / "standard_scaler.pkl")
