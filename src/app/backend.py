@@ -5,6 +5,7 @@ import streamlit as st
 from src.config import MODEL_DIR, MODEL_LGBM_DIR, PROCESSED_DIR
 from src.features.feature_engineering import (
     add_rolling_features,
+    add_time_features,
     clip_pollutants,
     handle_outliers_iqr,
     log_transform_features,
@@ -57,8 +58,9 @@ def process_and_predict(input_df, model):
     df = input_df.copy()
     df = clip_pollutants(df)
     df = handle_outliers_iqr(df)
-    df = log_transform_features(df)
     df = add_rolling_features(df)
+    df = log_transform_features(df)
+    df = add_time_features(df)
     df = df.drop(columns=["date", "county", "sitename", "status", "aqi", "season"])
 
     # Scaling

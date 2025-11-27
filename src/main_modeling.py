@@ -27,16 +27,14 @@ import pandas as pd
 from src.config import MODEL_DIR, PROCESSED_DIR
 from src.features.feature_engineering import (
     add_rolling_features,
+    add_time_features,
     clip_pollutants,
     handle_outliers_iqr,
     log_transform_features,
     scale_features,
 )
 from src.modeling.model_registry import MODEL_REGISTRY
-from src.modeling.train_baseline import (
-    build_features,
-    split_train_test,
-)
+from src.modeling.train_baseline import build_features, split_train_test
 from src.utils.emoji_log import done, error
 from src.utils.IO_file import convert_csv_to_parquet
 
@@ -95,6 +93,9 @@ def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.
 
     # Step 4: Log-transform skewed pollutants
     df = log_transform_features(df)
+
+    # Step 5: Add temporal feature
+    df = add_time_features(df)
 
     # === 3. Feature selection & scaling ===
     X, y = build_features(df)

@@ -170,3 +170,25 @@ def scale_features(
             raise ValueError("Scaler must be provided in test mode.")
         df_scaled[cols_to_scale] = scaler.transform(df_scaled[cols_to_scale])
         return df_scaled
+
+
+# -----------------------------
+# 6. add_time_features
+# -----------------------------
+def add_time_features(df: pd.DataFrame):
+    """
+    Encode season from string to integer.
+    (Year, Month, Weekday already exist in raw data)
+    """
+    df = df.copy()
+
+    # Mapping Season
+    season_map = {"Spring": 1, "Summer": 2, "Autumn": 3, "Winter": 4}
+
+    if "season" in df.columns:
+        df["season_encoded"] = df["season"].map(season_map)
+        # Fill Nan if any
+        df["season_encoded"] = df["season_encoded"].fillna(0).astype(int)
+        success("Season encoded successfully.")
+
+    return df
