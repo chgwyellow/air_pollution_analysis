@@ -295,6 +295,19 @@ Now you can run any .py or notebook directly inside the container.
 
 ---
 
+### **Chapter 09 — Temporal Feature Engineering**
+
+📓 `09_temporal_analysis.ipynb`
+
+- **Goal**: Capture seasonality and cyclical patterns in air quality.
+- **Implementation**:
+  - Extracted `month`, `weekday` from date.
+  - Encoded `season` (Spring=1, Summer=2, Autumn=3, Winter=4).
+  - Integrated into both Training Pipeline and Web App Backend.
+- **Insight**: While temporal features provide general trend information, daily-level granularity may still smooth out rapid pollution spikes, suggesting a need for finer-grained data or sequential models (LSTM) in the future.
+
+---
+
 ## 🚀 Web Application Deployment (Time Machine)
 
 The project includes a **Streamlit-based Web App** that serves as a "Time Machine" for air quality prediction.
