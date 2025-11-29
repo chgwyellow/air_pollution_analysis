@@ -35,7 +35,13 @@ from src.features.feature_engineering import (
 )
 from src.modeling.model_registry import MODEL_REGISTRY
 from src.modeling.train_baseline import build_features, split_train_test
-from src.utils.emoji_log import done, error
+from src.modeling.train_lstm import (
+    build_lstm_model,
+    evaluate_lstm_model,
+    prepare_lstm_data,
+    train_lstm_model,
+)
+from src.utils.emoji_log import done, error, task
 from src.utils.IO_file import convert_csv_to_parquet
 
 
@@ -96,6 +102,41 @@ def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.
 
     # Step 5: Add temporal feature
     df = add_time_features(df)
+
+    # === Branch for LSTM ===
+    if model_type == "lstm":
+        print(f"\n{'='*40}")
+        task("Running LSTM Pipeline (Time Series Mode)")
+        print(f"{'='*40}")
+
+        target_stations = ["Zhongshan", "Xitun", "Zuoying", "Hualien"]
+        metrics_all = {}
+
+        for station in target_stations:
+            print(f"\n🌍 Processing Station: {station}")
+            try:
+                # 1. Prepare
+                X_train, y_train, X_test, y_test, scaler = prepare_lstm_data(
+                    df, station
+                )
+
+                # 2. Build
+                input_shape = (X_train.shape[1], X_train.shape[2])
+                model = build_lstm_model(input_shape)
+
+                # 3. Train
+                train_lstm_model(model, X_train, y_train, station, epochs=20)
+
+                # 4. Evaluate
+                metrics = evaluate_lstm_model(model, X_test, y_test, scaler, station)
+                metrics_all[station] = metrics
+
+            except ValueError as e:
+                error(f"Skipping {station}: {e}")
+                continue
+
+        done("LSTM Pipeline completed for all stations.")
+        return None, metrics_all
 
     # === 3. Feature selection & scaling ===
     X, y = build_features(df)

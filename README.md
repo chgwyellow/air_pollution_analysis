@@ -34,8 +34,8 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
 - [Docker Support](#-docker-support-python-313)
 - [VSCode Dev Container](#-vscode-dev-container-recommended)
 - [Mounted Folders](#-mounted-folders)
-- [Environment Replication](#-environment-replication-reproducible-jupyter-environment)
 - [Project Layout](#-project-layout)
+- [Usage](#-usage)
 - [Notebook / Chapter Overview](#-notebook--chapter-overview)
 - [Web Application Deployment](#-web-application-deployment-time-machine)
 - [Field Summary](#-field-summary)
@@ -152,21 +152,27 @@ Now you can run any .py or notebook directly inside the container.
 │  ├─ 04_nonlinear_modeling.ipynb
 │  ├─ 05_model_optimization.ipynb
 │  ├─ 06_model_explainability_shap_analysis.ipynb
-│  └─ 07_model_prediction_evaluation.ipynb
+│  ├─ 07_model_prediction_evaluation.ipynb
+│  ├─ 08_advanced_boosting_lightgbm.ipynb
+│  ├─ 09_temporal_analysis.ipynb
+│  └─ 10_time_series_lstm.ipynb
 │
 ├─ output/
 │  ├─ figures/            # SHAP / EDA / 模型圖表
-|     ├─ linear/
-|     ├─ rf/
-|     ├─ rf_tuned/
+│  │  ├─ linear/
+│  │  ├─ rf/
+│  │  ├─ rf_tuned/
+│  │  ├─ lgbm/
+│  │  └─ lstm/
 │  └─ predictions/        # 模型預測輸出
 │
 ├─ result/                # CV 結果、tuning log、metrics
 │
 ├─ src/
+│  ├─ app/                # Streamlit Web App
 │  ├─ cleaning/           # 資料清理函式
 │  ├─ features/           # 特徵工程 (rolling, log, scaling)
-│  ├─ modeling/           # Baseline, RF, Tuning, SHAP
+│  ├─ modeling/           # Baseline, RF, Tuning, SHAP, LightGBM, LSTM
 │  ├─ utils/              # 工具 (emoji_log, IO, path)
 │  ├─ visualization/      # 圖表繪製
 │  ├─ config.py
@@ -179,6 +185,49 @@ Now you can run any .py or notebook directly inside the container.
 ├─ Dockerfile
 ├─ .dockerignore
 └─ README.md
+```
+
+---
+
+## 🔧 Usage
+
+### **1. Data Cleaning**
+
+Process raw CSV data into cleaned Parquet format.
+
+```bash
+python src/main_cleaning.py
+```
+
+### **2. Visualization**
+
+Generate exploratory data analysis (EDA) plots.
+
+```bash
+python src/main_visualization.py
+```
+
+### **3. Run Modeling Pipeline**
+
+Train and evaluate models using the automated pipeline.
+
+**Option A: Random Forest (Default)**
+
+```bash
+python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline('Taiwan', model_type='rf_tuned')"
+```
+
+**Option B: LightGBM (Fast & Accurate)**
+
+```bash
+python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline('Taiwan', model_type='lgbm')"
+```
+
+**Option C: LSTM (Deep Learning for Time Series) 🆕**
+
+```bash
+# Trains LSTM models for 4 representative stations (North, Central, South, East)
+python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline('Taiwan', model_type='lstm')"
 ```
 
 ---
