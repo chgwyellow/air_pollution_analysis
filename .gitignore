@@ -213,3 +213,4 @@ emoji.txt
 
 *.pkl
 *.joblib
+*.keras

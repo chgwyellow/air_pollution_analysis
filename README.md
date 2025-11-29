@@ -308,6 +308,21 @@ Now you can run any .py or notebook directly inside the container.
 
 ---
 
+### **Chapter 10 — Time Series Modeling (LSTM)**
+
+📓 `10_time_series_lstm.ipynb`
+
+- **Goal**: Address the "rapid spike" issue by modeling air quality as a time sequence.
+- **Implementation**:
+  - **Sliding Window**: Converted data into `(Samples, 7 Days, 10 Features)` format.
+  - **Model**: Built a 2-layer LSTM with Dropout for regularization using TensorFlow/Keras.
+  - **Training**: Used `Adam` optimizer and `MSE` loss with Early Stopping.
+- **Result**:
+  - Successfully captured rapid pollution spikes that LightGBM missed.
+  - Demonstrated the power of "Autoregression" (using past AQI to predict future AQI).
+
+---
+
 ## 🚀 Web Application Deployment (Time Machine)
 
 The project includes a **Streamlit-based Web App** that serves as a "Time Machine" for air quality prediction.
