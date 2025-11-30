@@ -176,4 +176,13 @@ def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.
 
 
 if __name__ == "__main__":
-    run_model_pipeline("Taiwan", model_type="lgbm")
+    import argparse
+
+    parser = argparse.ArgumentParser(description="Run Air Pollution Modeling Pipeline")
+    parser.add_argument(
+        "--model", type=str, default="lgbm", help="Model type (linear, rf, lgbm, lstm)"
+    )
+
+    args = parser.parse_args()
+
+    run_model_pipeline("Taiwan", model_type=args.model)
