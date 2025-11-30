@@ -1,7 +1,16 @@
 import pandas as pd
 import streamlit as st
 
-from src.app.backend import get_station_data, load_data, load_model, process_and_predict
+from src.app.backend import (
+    get_station_data,
+    load_data,
+    load_lstm_model,
+    load_lstm_scaler,
+    load_model,
+    predict_lstm,
+    prepare_lstm_input,
+    process_and_predict,
+)
 
 # === 1. Page Config ===
 st.set_page_config(
@@ -17,11 +26,30 @@ if df.empty:
 
 # === 3. sidebar ===
 st.sidebar.title("🍃 Air Quality Time Machine")
-st.sidebar.markdown("Predict historical AQI using LightGBM.")
+st.sidebar.markdown("Predict historical AQI using LightGBM or LSTM.")
+
+# === 3.0 Model Selection ===
+model_type = st.sidebar.radio(
+    "Select Model",
+    ["LightGBM(Tabular)", "LSTM (Time Series)"],
+    help="LightGBM uses tabular features. LSTM uses past 7 days sequence.",
+)
 
 # === 3.1 Station Selection ===
-stations = sorted(df["sitename"].unique())
-default_index = stations.index("Taoyuan") if "Taoyuan" in stations else 0
+all_stations = sorted(df["sitename"].unique())
+lstm_stations = ["Zhongshan", "Xitun", "Zuoying", "Hualien"]
+
+if model_type == "LSTM (Time Series)":
+    stations = [s for s in lstm_stations if s in all_stations]
+else:
+    stations = all_stations
+
+default_index = 0
+if "Taoyuan" in stations:
+    default_index = stations.index("Taoyuan")
+elif "Zhongshan" in stations:
+    default_index = stations.index("Zhongshan")
+
 selected_station = st.sidebar.selectbox("Select Station", stations, index=default_index)
 
 # === 3.2 Date Selection ===
@@ -53,18 +81,48 @@ if st.sidebar.button("🔮 Predict AQI", type="primary"):
         )
     else:
         # 4.3 Load Model & Predict
-        model = load_model()
-        if model:
-            prediction = process_and_predict(input_data, model)
+        prediction = None
+        model_name = "Model"
+
+        if model_type == "LightGBM (Tabular)":
+            model = load_model()
+            if model:
+                prediction = process_and_predict(input_data, model)
+                model_name = "LightGBM"
+
+        elif model_type == "LSTM (Time Series)":
+            model = load_lstm_model(selected_station)
+            scaler = load_lstm_scaler(selected_station)
+
+            if model is None or scaler is None:
+                st.error(f"❌ LSTM model not available for station: {selected_station}")
+                st.info(
+                    "ℹ️ Currently LSTM is only trained for: Zhongshan, Xitun, Zuoying, Hualien"
+                )
+            else:
+                input_seq = prepare_lstm_input(
+                    df, selected_station, selected_date, scaler
+                )
+
+                if input_seq is None:
+                    st.warning(
+                        "⚠️ Not enough historical data (need 30+ days buffer) for LSTM."
+                    )
+                else:
+                    prediction = predict_lstm(model, input_seq, scaler)
+                    model_name = "LSTM"
 
         # === 5. Display Result ===
-        col1, col2 = st.columns(2)
+        if prediction is not None:
+            col1, col2 = st.columns(2)
 
-        # Show the prediction on the left side
-        with col1:
-            st.metric(
-                label="Predicted AQI", value=f"{prediction:.2f}", delta="LightGBM Model"
-            )
+            # Show the prediction on the left side
+            with col1:
+                st.metric(
+                    label="Predicted AQI",
+                    value=f"{prediction:.2f}",
+                    delta=f"{model_name} Model",
+                )
 
         # Show the actual value if we have, comparing the accuracy
         with col2:
