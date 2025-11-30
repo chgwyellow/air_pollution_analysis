@@ -21,7 +21,7 @@ jobs:
         run: | # Multi rows block scalar
           python -m pip install --upgrade pip
           pip install poetry
-          poetry install # install the package in pyproject.toml
+          poetry install --no-root # install the package in pyproject.toml
 
       # Run the test
       - name: Test Run
