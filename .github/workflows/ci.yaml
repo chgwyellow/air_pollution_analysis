@@ -26,4 +26,4 @@ jobs:
       # Run the test
       - name: Test Run
         run: |
-          poetry run python src/main_modeling.py --help
+          PYTHONPATH=. poetry run python src/main_modeling.py --help
