@@ -372,6 +372,17 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 
 ---
 
+### **Chapter 11 — Web App Integration (LSTM)**
+
+- **Goal**: Integrate the LSTM model into the Streamlit Web App for interactive time-series forecasting.
+- **Implementation**:
+  - **Backend**: Implemented `load_lstm_model` and `prepare_lstm_input` with a full on-the-fly feature engineering pipeline.
+  - **Frontend**: Added a **Model Selection** UI to switch between LightGBM (Tabular) and LSTM (Time Series).
+  - **Dynamic Filtering**: Station list automatically filters based on the selected model (LSTM currently supports 4 representative stations).
+- **Result**: Users can now compare "Nowcasting" (LightGBM) and "Forecasting" (LSTM) results directly in the app.
+
+---
+
 ## 🚀 Web Application Deployment (Time Machine)
 
 The project includes a **Streamlit-based Web App** that serves as a "Time Machine" for air quality prediction.
@@ -380,7 +391,7 @@ The project includes a **Streamlit-based Web App** that serves as a "Time Machin
 - **Key Features**:
   - **Interactive Interface**: Select any station and historical date (2016-2024).
   - **Real-time Pipeline**: Performs on-the-fly feature engineering (Rolling, Log, Scaling) using the backend logic.
-  - **Model Inference**: Loads the trained LightGBM model for instant AQI prediction.
+  - **Model Inference**: Loads trained LightGBM or LSTM models for instant AQI prediction.
   - **Visualization**: Compares predicted vs. actual AQI and shows historical trends.
 
 **How to Run:**
@@ -410,7 +421,7 @@ streamlit run src/app/app.py
 
 - [x] LightGBM (Completed in Ch.8) / CatBoost / XGBoost
 
-- 空氣品質時序模型（LSTM、Prophet）
+- [x] 空氣品質時序模型（LSTM、Prophet）
 
 - 特徵交互項（例如風向 × PM2.5）
 

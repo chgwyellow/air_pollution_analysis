@@ -94,23 +94,16 @@ if st.sidebar.button("🔮 Predict AQI", type="primary"):
             model = load_lstm_model(selected_station)
             scaler = load_lstm_scaler(selected_station)
 
-            if model is None or scaler is None:
-                st.error(f"❌ LSTM model not available for station: {selected_station}")
-                st.info(
-                    "ℹ️ Currently LSTM is only trained for: Zhongshan, Xitun, Zuoying, Hualien"
+            # Prepare input (needs scaler)
+            input_seq = prepare_lstm_input(df, selected_station, selected_date, scaler)
+
+            if input_seq is None:
+                st.warning(
+                    "⚠️ Not enough historical data (need 30+ days buffer) for LSTM."
                 )
             else:
-                input_seq = prepare_lstm_input(
-                    df, selected_station, selected_date, scaler
-                )
-
-                if input_seq is None:
-                    st.warning(
-                        "⚠️ Not enough historical data (need 30+ days buffer) for LSTM."
-                    )
-                else:
-                    prediction = predict_lstm(model, input_seq, scaler)
-                    model_name = "LSTM"
+                prediction = predict_lstm(model, input_seq, scaler)
+                model_name = "LSTM"
 
         # === 5. Display Result ===
         if prediction is not None:

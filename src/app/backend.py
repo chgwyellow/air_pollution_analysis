@@ -2,7 +2,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import streamlit as st
-from tenserflow.keras.models import load_model as load_keras_model
+from tensorflow.keras.models import load_model as load_keras_model
 
 from src.config import MODEL_DIR, MODEL_LGBM_DIR, MODEL_LSTM_DIR, PROCESSED_DIR
 from src.features.feature_engineering import (
@@ -113,7 +113,7 @@ def load_lstm_model(sitename):
     return load_keras_model(model_path)
 
 
-@st.cache.resource
+@st.cache_resource
 def load_lstm_scaler(sitename):
     """Load the MinMaxScaler for a specific station."""
     scaler_path = MODEL_LSTM_DIR / f"lstm_scaler_{sitename}.pkl"
