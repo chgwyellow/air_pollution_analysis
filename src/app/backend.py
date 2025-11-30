@@ -133,7 +133,8 @@ def prepare_lstm_input(df, sitename, target_date, scaler, look_back=7):
 
     # 1. Date range
     target_dt = pd.to_datetime(target_date)
-    start_dt = target_dt - pd.Timedelta(days=look_back)
+    buffer_days = 30  # for rolling features
+    start_dt = target_dt - pd.Timedelta(days=buffer_days)
     end_dt = target_dt - pd.Timedelta(days=1)
 
     # 2. Filter sitename and date
@@ -141,10 +142,23 @@ def prepare_lstm_input(df, sitename, target_date, scaler, look_back=7):
     mask = (station_df["date"] >= start_dt) & (station_df["date"] <= end_dt)
     input_df = station_df[mask].copy()
 
-    if len(input_df) < look_back:
+    if len(input_df) < look_back + 7:
         return None
 
-    # 3. Select features
+    # 3. Apply Feature Engineering Pipeline
+    input_df = clip_pollutants(input_df)
+    input_df = handle_outliers_iqr(input_df)
+    input_df = add_rolling_features(input_df)
+    input_df = log_transform_features(input_df)
+    input_df = add_time_features(input_df)
+
+    # 4. Slice the last 7 days
+    lstm_window_df = input_df.iloc[-look_back:].copy()
+
+    if len(lstm_window_df) != look_back:
+        return None
+
+    # 5. Select features
     features = [
         "pm2.5",
         "pm10",
@@ -158,12 +172,16 @@ def prepare_lstm_input(df, sitename, target_date, scaler, look_back=7):
         "aqi",
     ]
 
-    data = input_df[features].values
+    for col in features:
+        if col not in lstm_window_df.columns:
+            lstm_window_df[col] = 0
 
-    # 4. Scaling
+    data = lstm_window_df[features].values
+
+    # 6. Scaling
     data_scaled = scaler.transform(data)
 
-    # 5. Reshaping
+    # 7. Reshaping
     input_seq = data_scaled.reshape(1, look_back, len(features))
 
     return input_seq
