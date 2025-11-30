@@ -18,7 +18,7 @@ jobs:
 
       # Installing the project dependency with poetry
       - name: Install dependencies
-        run: |
+        run: | # Multi rows block scalar
           python -m pip install --upgrade pip
           pip install poetry
           poetry install # install the package in pyproject.toml
