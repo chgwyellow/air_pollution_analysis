@@ -1,5 +1,6 @@
 import math
 
+import joblib
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -61,6 +62,11 @@ def prepare_lstm_data(
 
     X_train, y_train = create_dataset(train_scaled)
     X_test, y_test = create_dataset(test_scaled)
+
+    # Save scaler for inference
+    scaler_path = MODEL_LSTM_DIR / f"lstm_scaler_{sitename}.pkl"
+    joblib.dump(scaler, scaler_path)
+    info(f"Scaler saved to {scaler_path}")
 
     return X_train, y_train, X_test, y_test, scaler
 
