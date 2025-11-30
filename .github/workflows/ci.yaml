@@ -1,0 +1,29 @@
+name: Python CI # workflow name, show on Github Actions
+
+on: [push] # trigger
+
+jobs:
+  build: # define a job called 'build'.
+    runs-on: ubuntu-latest # environment
+
+    steps:
+      # Download the code to VM
+      - uses: actions/checkout@v3 # official script, copying the repo to VM
+
+      # Setting Python environment
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v4 # official script, installing python
+        with:
+          python-version: "3.13"
+
+      # Installing the project dependency with poetry
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install poetry
+          poetry install # install the package in pyproject.toml
+
+      # Run the test
+      - name: Test Run
+        run: |
+          poetry run python src/main_modeling.py --help
