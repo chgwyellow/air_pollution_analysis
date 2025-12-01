@@ -5,11 +5,10 @@ import sys
 if "src" not in sys.path:
     sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-import psutil
-
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 import pandas as pd
+import psutil
 import streamlit as st
 from streamlit_folium import st_folium
 
