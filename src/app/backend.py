@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 import pyarrow.parquet as pq
 import streamlit as st
-from tensorflow.keras.models import load_model as load_keras_model
 
 from src.config import MODEL_DIR, MODEL_LGBM_DIR, MODEL_LSTM_DIR, PROCESSED_DIR
 from src.features.feature_engineering import (
@@ -136,6 +135,8 @@ def load_lstm_model(sitename):
 @st.cache_resource
 def load_lstm_scaler(sitename):
     """Load the MinMaxScaler for a specific station."""
+    from tensorflow.keras.models import load_model as load_keras_model
+
     scaler_path = MODEL_LSTM_DIR / f"lstm_scaler_{sitename}.pkl"
 
     if not scaler_path.exists():
