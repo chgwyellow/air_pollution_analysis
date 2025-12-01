@@ -5,9 +5,10 @@ description = ""
 authors = [
     {name = "chgwyellow",email = "dinnis1107@gmail.com"}
 ]
-readme = "README.md"
-package-mode = false
+readme = "README.md
 requires-python = ">=3.13,<4"
+package-mode = false
+
 dependencies = [
     "pandas (>=2.3.3,<3.0.0)",
     "matplotlib (>=3.10.7,<4.0.0)",
