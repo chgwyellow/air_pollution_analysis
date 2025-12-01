@@ -1,10 +1,10 @@
 import os
 import sys
 
-# Ensure src is in path for Streamlit Cloud
-if "src" not in sys.path:
-    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+# Add project root to path FIRST
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
+# Set TensorFlow environment variable BEFORE importing any modules
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 import pandas as pd
