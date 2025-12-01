@@ -107,6 +107,21 @@ files = [
 ]
 
 [[package]]
+name = "branca"
+version = "0.8.2"
+description = "Generate complex HTML+JS pages with Python"
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "branca-0.8.2-py3-none-any.whl", hash = "sha256:2ebaef3983e3312733c1ae2b793b0a8ba3e1c4edeb7598e10328505280cf2f7c"},
+    {file = "branca-0.8.2.tar.gz", hash = "sha256:e5040f4c286e973658c27de9225c1a5a7356dd0702a7c8d84c0f0dfbde388fe7"},
+]
+
+[package.dependencies]
+jinja2 = ">=3"
+
+[[package]]
 name = "cachetools"
 version = "6.2.2"
 description = "Extensible memoizing collections and decorators"
@@ -591,6 +606,28 @@ files = [
     {file = "flatbuffers-25.9.23-py2.py3-none-any.whl", hash = "sha256:255538574d6cb6d0a79a17ec8bc0d30985913b87513a01cce8bcdb6b4c44d0e2"},
     {file = "flatbuffers-25.9.23.tar.gz", hash = "sha256:676f9fa62750bb50cf531b42a0a2a118ad8f7f797a511eda12881c016f093b12"},
 ]
+
+[[package]]
+name = "folium"
+version = "0.20.0"
+description = "Make beautiful maps with Leaflet.js & Python"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "folium-0.20.0-py2.py3-none-any.whl", hash = "sha256:f0bc2a92acde20bca56367aa5c1c376c433f450608d058daebab2fc9bf8198bf"},
+    {file = "folium-0.20.0.tar.gz", hash = "sha256:a0d78b9d5a36ba7589ca9aedbd433e84e9fcab79cd6ac213adbcff922e454cb9"},
+]
+
+[package.dependencies]
+branca = ">=0.6.0"
+jinja2 = ">=2.9"
+numpy = "*"
+requests = "*"
+xyzservices = "*"
+
+[package.extras]
+testing = ["pytest"]
 
 [[package]]
 name = "fonttools"
@@ -3159,6 +3196,24 @@ snowflake = ["snowflake-connector-python (>=3.3.0) ; python_version < \"3.12\"",
 sql = ["SQLAlchemy (>=2.0.0)"]
 
 [[package]]
+name = "streamlit-folium"
+version = "0.25.3"
+description = "Render Folium objects in Streamlit"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "streamlit_folium-0.25.3-py3-none-any.whl", hash = "sha256:cfdf085764da3f9b5e1e0668f6e4cc0385ff041c98133d023800983a875ca26c"},
+    {file = "streamlit_folium-0.25.3.tar.gz", hash = "sha256:5ec11b3eff85ec0d6259e72e5597bd79ca7ad65b8837222220964b78428f415b"},
+]
+
+[package.dependencies]
+branca = "*"
+folium = ">=0.13,<0.15.0 || >0.15.0"
+jinja2 = "*"
+streamlit = ">=1.13.0"
+
+[[package]]
 name = "tenacity"
 version = "9.1.2"
 description = "Retry code until it succeeds"
@@ -3629,7 +3684,19 @@ files = [
 [package.extras]
 dev = ["pytest", "setuptools"]
 
+[[package]]
+name = "xyzservices"
+version = "2025.11.0"
+description = "Source of XYZ tiles providers"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "xyzservices-2025.11.0-py3-none-any.whl", hash = "sha256:de66a7599a8d6dad63980b77defd1d8f5a5a9cb5fc8774ea1c6e89ca7c2a3d2f"},
+    {file = "xyzservices-2025.11.0.tar.gz", hash = "sha256:2fc72b49502b25023fd71e8f532fb4beddbbf0aa124d90ea25dba44f545e17ce"},
+]
+
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4"
-content-hash = "f2960bd94066da0b7330459ee53d42c243f865b35943960b77014cf567f4d917"
+content-hash = "1e123f6e517a077fa25f4ecbaad4295dd21bb9f9edb771ce8ecccd3f521602b9"
