@@ -6,6 +6,7 @@ authors = [
     {name = "chgwyellow",email = "dinnis1107@gmail.com"}
 ]
 readme = "README.md"
+package-mode = false
 requires-python = ">=3.13,<4"
 dependencies = [
     "pandas (>=2.3.3,<3.0.0)",
