@@ -207,10 +207,15 @@ marimo/_lsp/
 __marimo__/
 
 data/*
-!/data/.gitkeep
+!/data/processed/
+data/processed/*
+!/data/processed/full_data.parquet
 
 emoji.txt
 
 *.pkl
 *.joblib
 *.keras
+
+!/models/lgbm/*.pkl
+!/models/lstm/*

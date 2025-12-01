@@ -1,5 +1,7 @@
 import os
 
+import psutil
+
 os.environ["TF_ENABLE_ONEDNN_OPTS"] = "0"
 
 import pandas as pd
@@ -17,6 +19,12 @@ from src.app.backend import (
     process_and_predict,
 )
 from src.visualization.map_plot import plot_station_map
+
+# Show memory for Debug
+if st.sidebar.checkbox("Show Memory Usage", value=False):
+    process = psutil.Process()
+    mem_mb = process.memory_info.rss / 1024 / 1024
+    st.sidebar.info(f"Memory: {mem_mb:.0f} MB")
 
 # === 1. Page Config ===
 st.set_page_config(
