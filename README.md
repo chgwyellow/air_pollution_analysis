@@ -11,6 +11,7 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
 <p align="center">
   <!-- Environment / Tooling -->
   <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" />
+  <img src="https://github.com/chgwyellow/air_pollution_analysis/actions/workflows/ci.yaml/badge.svg" />
   <img src="https://img.shields.io/badge/Poetry-1.8+-6A5ACD?logo=poetry" />
   <img src="https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker&logoColor=white" />
   <img src="https://img.shields.io/badge/Jupyter-Supported-f37726?logo=jupyter" />
@@ -38,6 +39,7 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
 - [Usage](#-usage)
 - [Notebook / Chapter Overview](#-notebook--chapter-overview)
 - [Web Application Deployment](#-web-application-deployment-time-machine)
+- [CI/CD Pipeline](#-cicd-pipeline)
 - [Field Summary](#-field-summary)
 - [Future Work](#-future-work-planning)
 - [ML Workflow Architecture](#-full-ml-workflow-architecture)
@@ -236,7 +238,8 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 
 以下為各章節 Notebook 的角色與內容摘要。
 
-### **Chapter 01 — Data Cleaning Quality Check**  
+<details>
+<summary><b>🧹 Chapter 01 — Data Cleaning Quality Check</b></summary>
 
 📓 `01_data_cleaning_check.ipynb`
 
@@ -246,9 +249,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - Preliminary distribution and correlation analysis
 - Output: **Processed cleaned data**
 
+</details>
+
 ---
 
-### **Chapter 02 — Feature Engineering Verification**  
+<details>
+<summary><b>⚙️ Chapter 02 — Feature Engineering Verification</b></summary>
 
 📓 `02_feature_check.ipynb`
 
@@ -258,9 +264,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - Data type, missing value, and rationality checks for features
 - Output: **Final feature column list**
 
+</details>
+
 ---
 
-### **Chapter 03 — Baseline Modeling (Linear Regression)**  
+<details>
+<summary><b>📐 Chapter 03 — Baseline Modeling (Linear Regression)</b></summary>
 
 📓 `03_baseline_modeling.ipynb`
 
@@ -269,9 +278,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - Baseline model persistence (pkl)
 - Benchmark for subsequent RF and tuning comparisons
 
+</details>
+
 ---
 
-### **Chapter 04 — Nonlinear Modeling (Random Forest)**  
+<details>
+<summary><b>🌳 Chapter 04 — Nonlinear Modeling (Random Forest)</b></summary>
 
 📓 `04_nonlinear_modeling.ipynb`
 
@@ -282,9 +294,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - Diagnosing initial RF performance bottlenecks
 - Foundation for hyperparameter tuning
 
+</details>
+
 ---
 
-### **Chapter 05 — Model Optimization & Hyperparameter Tuning**  
+<details>
+<summary><b>🎯 Chapter 05 — Model Optimization & Hyperparameter Tuning</b></summary>
 
 📓 `05_model_optimization.ipynb`
 
@@ -295,9 +310,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - Final model: Best parameters + Full data training
 - Output: **Best model, metrics, CV results**
 
+</details>
+
 ---
 
-### **Chapter 06 — Model Explainability (SHAP Analysis)**  
+<details>
+<summary><b>💡 Chapter 06 — Model Explainability (SHAP Analysis)</b></summary>
 
 📓 `06_model_explainability_shap_analysis.ipynb`
 
@@ -310,9 +328,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - Identifying features the model truly relies on
 - Linking SHAP results to environmental domain knowledge
 
+</details>
+
 ---
 
-### **Chapter 07 — Prediction Evaluation & Final Reporting**  
+<details>
+<summary><b>📋 Chapter 07 — Prediction Evaluation & Final Reporting</b></summary>
 
 📓 `07_model_prediction_evaluation.ipynb`
 
@@ -326,9 +347,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
   - Challenges remain for peak pollution events
 - Output: Final model report, key charts, prediction results
 
+</details>
+
 ---
 
-### **Chapter 08 — Advanced Gradient Boosting (LightGBM)**  
+<details>
+<summary><b>⚡ Chapter 08 — Advanced Gradient Boosting (LightGBM)</b></summary>
 
 📓 `08_advanced_boosting_lightgbm.ipynb`
 
@@ -342,9 +366,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
   - Integrated into `run_model_pipeline`
 - **Result**: Significant performance leap over Random Forest.
 
+</details>
+
 ---
 
-### **Chapter 09 — Temporal Feature Engineering**
+<details>
+<summary><b>⏰ Chapter 09 — Temporal Feature Engineering</b></summary>
 
 📓 `09_temporal_analysis.ipynb`
 
@@ -355,9 +382,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
   - Integrated into both Training Pipeline and Web App Backend.
 - **Insight**: While temporal features provide general trend information, daily-level granularity may still smooth out rapid pollution spikes, suggesting a need for finer-grained data or sequential models (LSTM) in the future.
 
+</details>
+
 ---
 
-### **Chapter 10 — Time Series Modeling (LSTM)**
+<details>
+<summary><b>🧠 Chapter 10 — Time Series Modeling (LSTM)</b></summary>
 
 📓 `10_time_series_lstm.ipynb`
 
@@ -369,6 +399,8 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - **Result**:
   - Successfully captured rapid pollution spikes that LightGBM missed.
   - Demonstrated the power of "Autoregression" (using past AQI to predict future AQI).
+
+</details>
 
 ---
 
@@ -394,7 +426,22 @@ streamlit run src/app/app.py
 
 ---
 
+## ⚙️ CI/CD Pipeline
+
+The project uses **GitHub Actions** for automated testing and continuous integration.
+
+- **Workflow**: `.github/workflows/ci.yaml`
+- **Trigger**: Runs on every `push` to the repository.
+- **Jobs**:
+  - Sets up Python 3.13 environment on Ubuntu.
+  - Installs dependencies via Poetry.
+  - Runs a "Smoke Test" (`python src/main_modeling.py --help`) to verify code integrity and environment setup.
+
+---
+
 ## 🧪 Field Summary
+
+---
 
 | Field                       | Description  |
 | --------------------------- | ------------ |
