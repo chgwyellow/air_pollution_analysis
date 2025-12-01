@@ -408,8 +408,9 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 
 The project includes a **Streamlit-based Web App** that serves as a "Time Machine" for air quality prediction.
 
-- **Entry Point**: `src/app/app.py`
+- **Entry Point**: [src/app/app.py]
 - **Key Features**:
+  - **Dual Mode Interface**: Switch between single-station prediction and island-wide map view.
   - **Interactive Interface**: Select any station and historical date (2016-2024).
   - **Real-time Pipeline**: Performs on-the-fly feature engineering (Rolling, Log, Scaling) using the backend logic.
   - **Model Inference**: Loads trained LightGBM or LSTM models for instant AQI prediction.
@@ -417,6 +418,10 @@ The project includes a **Streamlit-based Web App** that serves as a "Time Machin
     - **Backend**: Implemented `load_lstm_model` and `prepare_lstm_input` with a full on-the-fly feature engineering pipeline.
     - **Frontend**: Added a **Model Selection** UI to switch between LightGBM (Tabular) and LSTM (Time Series).
     - **Dynamic Filtering**: Station list automatically filters based on the selected model.
+  - **Geo-spatial Mapping** :
+    - **Interactive Map**: Visualize air quality across all Taiwan stations using Folium.
+    - **Color-coded Markers**: AQI levels displayed with intuitive color scheme (Green/Orange/Red/Purple/Black).
+    - **Time Selection**: Choose specific date and hour to view historical air quality distribution.
 
 **How to Run:**
 
@@ -468,7 +473,9 @@ The project uses **GitHub Actions** for automated testing and continuous integra
 
 - [x] 模型部署（Streamlit）
 
-- Geo-spatial Mapping（AQI 地圖熱點分析）
+- [x] Geo-spatial Mapping（AQI 地圖熱點分析）
+
+- Cloud Deployment (Streamlit Cloud / Render)
 
 ---
 
