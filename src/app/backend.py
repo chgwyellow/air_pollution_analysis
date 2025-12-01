@@ -3,6 +3,7 @@ import os
 import joblib
 import numpy as np
 import pandas as pd
+import pyarrow.parquet as pq
 import streamlit as st
 from tensorflow.keras.models import load_model as load_keras_model
 
@@ -29,10 +30,23 @@ def load_data():
         st.error(f"Data not found: {parquet_path}")
         return pd.DataFrame()
 
-    df = pd.read_parquet(parquet_path)
     if os.getenv("STREAMLIT_SHARING") or os.getenv("STREAMLIT_CLOUD"):
-        df = df.sample(frac=0.5, random_state=42).sort_values("date")
-        st.sidebar.info("🌐 Running on Cloud (50% data sample)")
+        # Read Parquet metadata
+        parquet_file = pq.ParquetFile(parquet_path)
+        total_rows = parquet_file.metadata.num_rows
+
+        # Only read 50% row groups
+        num_row_groups = parquet_file.num_row_groups
+        selected_groups = list(range(0, num_row_groups, 2))
+
+        table = parquet_file.read_row_groups(selected_groups)
+        df = table.to_pandas()
+
+        st.sidebar.info(f"🌐 Cloud mode: {len(df):,} / {total_rows:,} rows")
+    else:
+
+        df = pd.read_parquet(parquet_path)
+
     df["date"] = pd.to_datetime(df["date"])
 
     return df
