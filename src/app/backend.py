@@ -1,3 +1,5 @@
+import os
+
 import joblib
 import numpy as np
 import pandas as pd
@@ -28,7 +30,11 @@ def load_data():
         return pd.DataFrame()
 
     df = pd.read_parquet(parquet_path)
+    if os.getenv("STREAMLIT_SHARING") or os.getenv("STREAMLIT_CLOUD"):
+        df = df.sample(frac=0.5, random_state=42).sort_values("date")
+        st.sidebar.info("🌐 Running on Cloud (50% data sample)")
     df["date"] = pd.to_datetime(df["date"])
+
     return df
 
 
