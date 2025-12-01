@@ -36,7 +36,7 @@ def load_data():
 
         # Only read 50% row groups
         num_row_groups = parquet_file.num_row_groups
-        selected_groups = list(range(0, num_row_groups, 2))
+        selected_groups = list(range(0, num_row_groups, 3))
 
         table = parquet_file.read_row_groups(selected_groups)
         df = table.to_pandas()
@@ -123,6 +123,7 @@ def load_model():
 @st.cache_resource
 def load_lstm_model(sitename):
     """Load the trained LSTM model for a specific station."""
+    from tensorflow.keras.models import load_model as load_keras_model
     model_path = MODEL_LSTM_DIR / f"lstm_{sitename}.keras"
 
     if not model_path.exists():
