@@ -1,4 +1,9 @@
 import os
+import sys
+
+# Ensure src is in path for Streamlit Cloud
+if "src" not in sys.path:
+    sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import psutil
 
