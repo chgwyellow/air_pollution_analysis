@@ -1,10 +1,8 @@
-import os
-
 import joblib
 import numpy as np
 import pandas as pd
-import pyarrow.parquet as pq
 import streamlit as st
+from tensorflow.keras.models import load_model as load_keras_model
 
 from src.config import MODEL_DIR, MODEL_LGBM_DIR, MODEL_LSTM_DIR, PROCESSED_DIR
 from src.features.feature_engineering import (
@@ -29,23 +27,7 @@ def load_data():
         st.error(f"Data not found: {parquet_path}")
         return pd.DataFrame()
 
-    if os.getenv("STREAMLIT_SHARING") or os.getenv("STREAMLIT_CLOUD"):
-        # Read Parquet metadata
-        parquet_file = pq.ParquetFile(parquet_path)
-        total_rows = parquet_file.metadata.num_rows
-
-        # Only read 50% row groups
-        num_row_groups = parquet_file.num_row_groups
-        selected_groups = list(range(0, num_row_groups, 3))
-
-        table = parquet_file.read_row_groups(selected_groups)
-        df = table.to_pandas()
-
-        st.sidebar.info(f"🌐 Cloud mode: {len(df):,} / {total_rows:,} rows")
-    else:
-
-        df = pd.read_parquet(parquet_path)
-
+    df = pd.read_parquet(parquet_path)
     df["date"] = pd.to_datetime(df["date"])
 
     return df
@@ -123,7 +105,6 @@ def load_model():
 @st.cache_resource
 def load_lstm_model(sitename):
     """Load the trained LSTM model for a specific station."""
-    from tensorflow.keras.models import load_model as load_keras_model
     model_path = MODEL_LSTM_DIR / f"lstm_{sitename}.keras"
 
     if not model_path.exists():
@@ -136,8 +117,6 @@ def load_lstm_model(sitename):
 @st.cache_resource
 def load_lstm_scaler(sitename):
     """Load the MinMaxScaler for a specific station."""
-    from tensorflow.keras.models import load_model as load_keras_model
-
     scaler_path = MODEL_LSTM_DIR / f"lstm_scaler_{sitename}.pkl"
 
     if not scaler_path.exists():
