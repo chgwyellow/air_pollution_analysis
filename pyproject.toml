@@ -5,7 +5,7 @@ description = ""
 authors = [
     {name = "chgwyellow",email = "dinnis1107@gmail.com"}
 ]
-readme = "README.md
+readme = "README.md"
 requires-python = ">=3.13,<4"
 package-mode = false
 
