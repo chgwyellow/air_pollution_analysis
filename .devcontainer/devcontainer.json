@@ -1,6 +1,6 @@
 {
   "name": "Air Pollution ML Project (Python 3.13)",
-  "dockerFile": "Dockerfile",
+  "dockerFile": "../Dockerfile",
   "context": "..",
 
   "workspaceFolder": "/app",

@@ -76,19 +76,28 @@ This project provides a full machine-learning workflow to analyze Taiwan’s air
 
 The project supports Docker to guarantee a reproducible, isolated, and dependency-consistent ML environment.
 
+> **📌 Note**: This Dockerfile uses **bind mount** strategy. Project files are NOT copied into the image, but mounted at runtime for instant synchronization between host and container.
+
 ### 🔧 1. Build Image
 
-```nginx
+```bash
 docker build -t air_pollution .
 ```
 
 ### 🔧 2. Start a Development Shell
 
-```ruby
+```bash
 docker run -it \
   -v $(pwd):/app \
   air_pollution bash
 ```
+
+**What happens:**
+
+- `-v $(pwd):/app`: Mounts your current directory to `/app` in the container (bind mount)
+- Any file changes on your host are **instantly visible** in the container
+- Any changes made in the container are **reflected on your host**
+- No need to rebuild image when code changes
 
 You can now run:
 
@@ -126,11 +135,20 @@ Ctrl + Shift + P → Dev Containers: Reopen in Container
 
 Now you can run any .py or notebook directly inside the container.
 
-### 📂 Mounted Folders
+### 📂 Mounted Folders (Bind Mount)
 
-| Local Folder      | Container Path | Description                                |
-| ----------------- | -------------- | ------------------------------------------ |
-| `.` (All Project) | `/app`         | Source code + data + models 全部會掛進容器 |
+Both Docker and Dev Container use **bind mount** to synchronize files:
+
+| Local Folder      | Container Path | Sync Type      | Description                                      |
+| ----------------- | -------------- | -------------- | ------------------------------------------------ |
+| `.` (All Project) | `/app`         | Bi-directional | Source code + data + models 全部會掛進容器,雙向即時同步 |
+
+**Benefits of Bind Mount:**
+
+- ✅ Edit code on host with your favorite IDE → Run in container immediately
+- ✅ Generate outputs in container → Instantly available on host
+- ✅ No need to rebuild image when code changes
+- ✅ Consistent development experience across team members
 
 ---
 

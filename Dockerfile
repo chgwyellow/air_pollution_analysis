@@ -9,6 +9,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     liblapack-dev \
     libgomp1 \
     git \
+    curl \
+    nano \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
@@ -21,9 +23,9 @@ RUN pip install --no-cache-dir poetry
 RUN poetry config virtualenvs.create false \
     && poetry install --no-interaction --no-ansi --no-root
 
-COPY src/ ./src
-COPY data/ ./data
-COPY models/ ./models
-COPY output/ ./output
-COPY result/ ./result
-COPY README.md ./
+# COPY src/ ./src
+# COPY data/ ./data
+# COPY models/ ./models
+# COPY output/ ./output
+# COPY result/ ./result
+# COPY README.md ./
