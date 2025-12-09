@@ -45,7 +45,7 @@ from src.utils.emoji_log import done, error, task
 from src.utils.IO_file import convert_csv_to_parquet
 
 
-def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=0.5):
+def run_model_pipeline(filename: str, model_type: str = "linear", sample_frac=1):
     """
     Run the complete model training pipeline.
 

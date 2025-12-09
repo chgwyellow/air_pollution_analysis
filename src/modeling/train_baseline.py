@@ -27,7 +27,7 @@ def build_features(df: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series]:
     y = df["aqi"]
 
     # Establish X
-    X = df.drop(columns=["date", "county", "sitename", "status", "aqi", "season"])
+    X = df.drop(columns=["date", "county", "sitename", "aqi", "season"])
 
     # Fill the na with 0
     X = X.fillna(0)

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.metrics import mean_absolute_error, mean_squared_error
-from sklearn.preprocessing import MinMaxScaler
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input
 from tensorflow.keras.models import Sequential
@@ -67,6 +67,68 @@ def prepare_lstm_data(
     scaler_path = MODEL_LSTM_DIR / f"lstm_scaler_{sitename}.pkl"
     joblib.dump(scaler, scaler_path)
     info(f"Scaler saved to {scaler_path}")
+
+    return X_train, y_train, X_test, y_test, scaler
+
+
+def prepare_unified_lstm_data(
+    df: pd.DataFrame, look_back: int = 14, train_split: float = 0.8
+):
+    """
+    Prepare unified LSTM data
+    """
+    df = df.sort_values(["sitename", "date"]).copy()
+
+    # Convert the sitename to numbers
+    le = LabelEncoder()
+    df["site_name_encoded"] = le.fit_transform(df["sitename"])
+
+    features = [
+        "pm2.5",
+        "pm10",
+        "o3",
+        "co",
+        "so2",
+        "no2",
+        "windspeed",
+        "winddirec",
+        "pm2.5_rolling_3d",
+        "pm2.5_rolling_7d",
+        "month",
+        "weekday",
+        "season_encoded",
+        "sitename_encoded",
+        "aqi",
+    ]
+
+    data = df[features].values
+
+    # 3. Split Train/Test (chronological)
+    train_size = int(len(data) * train_split)
+    train_data, test_data = data[:train_size], data[train_size:]
+
+    # 4. scaling
+    scaler = MinMaxScaler(feature_range=(0, 1))
+    train_scaled = scaler.fit_transform(train_data)
+    test_scaled = scaler.transform(test_data)
+
+    # 5. Sliding window
+    def create_dataset(dataset):
+        X, y = [], []
+        for i in range(len(dataset) - look_back):
+            X.append(dataset[i : i + look_back])
+            y.append(dataset[i + look_back, -1])
+        return np.array(X), np.array(y)
+
+    X_train, y_train = create_dataset(train_scaled)
+    X_test, y_test = create_dataset(test_scaled)
+
+    # Save scaler for inference
+    scaler_path = MODEL_LSTM_DIR / "lstm_scaler_unified.pkl"
+    joblib.dump(scaler, scaler_path)
+    joblib.dump(le, MODEL_LSTM_DIR / "lstm_label_encoder.pkl")
+    info(f"Scaler saved to {scaler_path}")
+    info(f"LE_encoder saved to {MODEL_LSTM_DIR / "lstm_label_encoder.pkl"}")
 
     return X_train, y_train, X_test, y_test, scaler
 
