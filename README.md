@@ -55,11 +55,13 @@ This project provides a full machine-learning workflow to analyze Taiwan’s air
 
 ✔ Feature engineering (rolling windows, log transforms, scaling)
 
-✔ Baseline & nonlinear models (Linear, Random Forest, LightGBM)
+✔ Baseline & nonlinear models (Linear, Random Forest, **LightGBM**)
 
 ✔ Hyperparameter tuning (RandomSearch + GridSearch)
 
 ✔ Model explainability (SHAP TreeExplainer)
+
+✔ **Best Performance: LightGBM (R² = 0.956, RMSE = 7.39)**
 
 ✔ Evaluation & visualization
 
@@ -243,18 +245,34 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline('Taiwan', model_type='lgbm')"
 ```
 
-**Option C: LSTM (Deep Learning for Time Series) 🆕**
+**Option C: LSTM Unified (Experimental) 🧪**
 
 ```bash
-# Trains LSTM models for 4 representative stations (North, Central, South, East)
-python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline('Taiwan', model_type='lstm')"
+# Unified LSTM model (experimental - performance lower than LightGBM)
+python src/main_modeling.py --model lstm_unified
 ```
+
+> **⚠️ Note**: LSTM shows lower performance (R² = 0.714) compared to LightGBM on this tabular dataset. LightGBM is recommended for production use.
+
+### **📊 Model Performance Comparison**
+
+| Model | R² Score | RMSE | MAE | Training Time | Best For |
+|-------|----------|------|-----|---------------|----------|
+| **LightGBM** ⭐ | **0.956** | **7.39** | **4.48** | ~12 mins | **Production (Recommended)** |
+| Random Forest (Tuned) | 0.92 | ~9.5 | ~6.2 | ~2 hours | Baseline comparison |
+| LSTM Unified | 0.714 | 18.01 | 13.34 | ~1 hour | Experimental only |
+| Linear Regression | 0.85 | ~12.0 | ~8.5 | ~1 min | Quick baseline |
+
+**Key Insights**:
+
+- ✅ **LightGBM** achieves the best performance with R² = 0.956
+- ⚡ **Fast training** compared to Random Forest
+- 📊 **Tabular data** (daily aggregated) is better suited for gradient boosting than LSTM
+- 🎯 **Feature engineering** (rolling features) already captures temporal patterns
 
 ---
 
 ## 📘 Notebook / Chapter Overview
-
-以下為各章節 Notebook 的角色與內容摘要。
 
 <details>
 <summary><b>🧹 Chapter 01 — Data Cleaning Quality Check</b></summary>
@@ -377,12 +395,12 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 - **Memory Optimization**: Implemented Chunking Strategy (CSV → Parquet) to handle 5.8M+ rows on 16GB RAM.
 - **LightGBM Implementation**:
   - Faster training (~12 mins vs hours for RF)
-  - Better accuracy (RMSE improved by ~18%)
+  - **Superior accuracy**: R² = **0.956**, RMSE = **7.39**, MAE = **4.48**
   - Early Stopping to prevent overfitting
 - **Pipeline Integration**:
   - Automated efficient data loading
   - Integrated into `run_model_pipeline`
-- **Result**: Significant performance leap over Random Forest.
+- **Result**: **Best performing model** - significantly outperforms Random Forest and LSTM.
 
 </details>
 
@@ -409,14 +427,18 @@ python -c "from src.main_modeling import run_model_pipeline; run_model_pipeline(
 
 📓 `10_time_series_lstm.ipynb`
 
-- **Goal**: Address the "rapid spike" issue by modeling air quality as a time sequence.
+- **Goal**: Explore time series modeling approach for air quality prediction.
 - **Implementation**:
-  - **Sliding Window**: Converted data into `(Samples, 7 Days, 10 Features)` format.
+  - **Sliding Window**: Converted data into `(Samples, 14 Days, Features)` format.
   - **Model**: Built a 2-layer LSTM with Dropout for regularization using TensorFlow/Keras.
   - **Training**: Used `Adam` optimizer and `MSE` loss with Early Stopping.
 - **Result**:
-  - Successfully captured rapid pollution spikes that LightGBM missed.
-  - Demonstrated the power of "Autoregression" (using past AQI to predict future AQI).
+  - **Performance**: R² = 0.714, RMSE = 18.01, MAE = 13.34
+  - **Insight**: LSTM underperforms LightGBM on this tabular dataset because:
+    - Daily aggregated data lacks fine-grained temporal patterns
+    - Feature engineering (rolling features) already captures time dependencies
+    - LightGBM better suited for multi-feature tabular data
+  - **Conclusion**: For this use case, **LightGBM is the recommended model**.
 
 </details>
 
