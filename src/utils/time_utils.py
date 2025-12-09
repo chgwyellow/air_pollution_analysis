@@ -15,7 +15,7 @@ def add_time_features(df: pd.DataFrame, data_col: str = "date") -> pd.DataFrame:
         date_col (str): Name of the date column.
 
     Returns:
-        pd.DataFrame: DataFrame with new columns: year, month, day, weekday, hour.
+        pd.DataFrame: DataFrame with new columns: year, month, day, weekday.
     """
     df = df.copy()
 
@@ -23,15 +23,13 @@ def add_time_features(df: pd.DataFrame, data_col: str = "date") -> pd.DataFrame:
         error(f"No column named {data_col} found.")
         return df
 
-    df[data_col] = pd.to_datetime(df[data_col], errors="coerce")
-
+    # Date column should already be datetime type from data_cleaning
     df["year"] = df[data_col].dt.year
     df["month"] = df[data_col].dt.month
     df["day"] = df[data_col].dt.day
     df["weekday"] = df[data_col].dt.weekday
-    df["hour"] = df[data_col].dt.hour
 
-    success("Time features (year, month, day, weekday, hour) added successfully.")
+    success("Time features (year, month, day, weekday) added successfully.")
 
     return df
 

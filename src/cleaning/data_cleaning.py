@@ -32,6 +32,21 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
     df["date"] = pd.to_datetime(df["date"], errors="coerce")
     df = df.dropna(subset=["date"])
 
+    # Normalize to date only (remove time component) while keeping datetime type
+    df["date"] = df["date"].dt.normalize()
+
+    # Drop unnecessary columns early to save memory and processing time
+    drop_cols = [
+        "unit",
+        "pm2.5_avg",
+        "pm10_avg",
+        "pollutant",
+        "siteid",
+        "so2_avg",
+        "status",
+    ]
+    df = df.drop(columns=drop_cols, errors="ignore")
+
     # Transfer the air element columns' type to float
     numeric_col = [
         "so2",
@@ -46,9 +61,6 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
         "windspeed",
         "winddirec",
         "co_8hr",
-        "pm2.5_avg",
-        "pm10_avg",
-        "so2_avg",
     ]
     existing_col = [col for col in numeric_col if col in df.columns]
     df[existing_col] = df[existing_col].apply(pd.to_numeric, errors="coerce")
@@ -64,28 +76,41 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
                 lambda x: x.fillna(x.mean())
             )
 
-    # Column unit has 5,882,208 Nan so we can drop it off
-    df = df.drop(columns=["unit"], errors="ignore")
-
     # replace the space between county name with _
     df["county"] = df["county"].str.replace(" ", "_")
 
     # Remove invalid or extreme AQI values
     df = df[(df["aqi"] >= 0) & (df["aqi"] <= 500)]
 
-    # Drop highly redundant pollutant average columns
-    if drop_high_corr:
-        drop_columns = ["pm2.5_avg", "pm10_avg"]
-        df.drop(columns=drop_columns, errors="ignore", inplace=True)
+    # Define the numerical columns to get the max value
+    numeric_max_cols = [
+        "aqi",
+        "so2",
+        "co",
+        "o3",
+        "o3_8hr",
+        "pm10",
+        "pm2.5",
+        "no2",
+        "nox",
+        "no",
+        "co_8hr",
+    ]
 
-    # With too high missing value percentage, we drop it.
-    drop_cols = ["pollutant", "siteid", "so2_avg"]
-    df = df.drop(columns=drop_cols, errors="ignore")
+    agg_dict = {col: "max" for col in numeric_max_cols if col in df.columns}
 
-    # Fill the missing value in windspeed and winddirec with mean
-    df["windspeed"] = df["windspeed"].fillna(df["windspeed"].mean())
-    df["winddirec"] = df["winddirec"].fillna(df["winddirec"].mean())
-    warn("Filling missing windspeed/winddirec with global mean.")
+    # Retrieve the first value for the following columns
+    categorical_cols = ["sitename", "county", "latitude", "longitude"]
+    for col in categorical_cols:
+        if col in df.columns:
+            agg_dict[col] = "first"
+
+    agg_dict["windspeed"] = "max"
+    # Use lambda to get mode for wind direction (circular data)
+    # pd.mode() return a Series
+    agg_dict["winddirec"] = lambda x: x.mode()[0] if len(x.mode()) > 0 else 0
+
+    df = df.groupby(["date", "sitename"], as_index=False).agg(agg_dict)
 
     # Fill the pollutants with mean
     pollutant_cols = ["no", "nox", "o3_8hr", "co_8hr"]
@@ -95,16 +120,26 @@ def clean_air_quality(df: pd.DataFrame, drop_high_corr: bool = True) -> pd.DataF
                 lambda x: x.fillna(x.mean())
             )
 
-    # Fill the missing value in longtitude and latitude with mean
+    # Fill the missing value in longitude and latitude with mean
     geo_cols = ["latitude", "longitude"]
     for col in geo_cols:
         if col in df.columns:
             df[col] = df.groupby("county")[col].transform(lambda x: x.fillna(x.mean()))
 
+    # Fill the missing value in windspeed and winddirec with mean and mode
+    df["windspeed"] = df.groupby("county")["windspeed"].transform(
+        lambda x: x.fillna(x.mean())
+    )
+
+    df["winddirec"] = df.groupby("county")["winddirec"].transform(
+        lambda x: x.fillna(x.mode()[0] if not x.mode().empty else 0)
+    )
+    warn("Filling missing winddirec with mode (most frequent direction).")
+
     # Add time columns
     df = add_time_features(df)
 
-    # Add seasom colums
+    # Add season columns
     df = add_season_feature(df)
 
     # Remove duplicate rows
