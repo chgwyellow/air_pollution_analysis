@@ -180,7 +180,10 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="Run Air Pollution Modeling Pipeline")
     parser.add_argument(
-        "--model", type=str, default="lgbm", help="Model type (linear, rf, lgbm)"
+        "--model",
+        type=str,
+        default="lgbm",
+        help="Model type (linear, rf, lgbm, lstm_unified)",
     )
 
     args = parser.parse_args()

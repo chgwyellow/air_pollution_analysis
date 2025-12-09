@@ -1,12 +1,14 @@
 from src.config import (
     MODEL_LGBM_DIR,
     MODEL_LINEAR_DIR,
+    MODEL_LSTM_DIR,
     MODEL_RF_BEST_DIR,
     MODEL_RF_DIR,
     MODEL_RF_TUNED_DIR,
 )
 from src.modeling.train_baseline import train_linear_model
 from src.modeling.train_lightgbm import train_lightgbm
+from src.modeling.train_lstm import train_unified_lstm
 from src.modeling.train_rf import train_random_forest, train_random_forest_best
 from src.modeling.tune_rf import tune_random_forest
 
@@ -35,5 +37,10 @@ MODEL_REGISTRY = {
         "model_name": "LightGBM",
         "save_dir": MODEL_LGBM_DIR,
         "train_func": train_lightgbm,
+    },
+    "lstm_unified": {
+        "model_name": "LSTM_Unified",
+        "save_dir": MODEL_LSTM_DIR,
+        "train_func": train_unified_lstm,
     },
 }

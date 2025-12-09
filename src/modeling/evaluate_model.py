@@ -31,7 +31,7 @@ def evaluate_and_save(
 
         # === 4. Save metrics ===
         timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")
-        metrics_path = RESULT_DIR / f"{model_name}_metrics_lastest.json"
+        metrics_path = RESULT_DIR / f"{model_name}_metrics_latest.json"
         metrics = {"MAE": mae, "RMSE": rmse, "R2": r2, "timestamp": timestamp}
         with open(metrics_path, "w", encoding="utf-8") as f:
             json.dump(metrics, f, indent=4)

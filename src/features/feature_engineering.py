@@ -76,7 +76,7 @@ def add_rolling_features(
     if pollutants is None:
         pollutants = ["so2", "co", "o3", "pm10", "pm2.5", "no2", "no", "nox"]
 
-    df = df.sort_values("date", ascending=False).copy()
+    df = df.sort_values("date", ascending=True).copy()
 
     for pollutant in pollutants:
         # Skip already smoothed columns
