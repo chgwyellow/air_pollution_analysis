@@ -62,7 +62,7 @@ def process_and_predict(input_df, model):
     df = add_rolling_features(df)
     df = log_transform_features(df)
     df = add_time_features(df)
-    df = df.drop(columns=["date", "county", "sitename", "status", "aqi", "season"])
+    df = df.drop(columns=["date", "county", "sitename", "aqi", "season"])
 
     # Scaling
     scaler = joblib.load(MODEL_DIR / "standard_scaler.pkl")

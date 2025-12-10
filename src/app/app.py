@@ -132,17 +132,33 @@ elif app_mode == "🗺️ Geo-spatial Map":
     st.title("🗺️ Taiwan Air Quality Map")
     st.markdown(f"### 📅 Showing Data for: **{selected_date}**")
 
-    m = plot_station_map(df, target_datetime)
-    st_folium(m, width=700, height=900)
+    # Create two columns: map on left, legend on right
+    col1, col2 = st.columns([3, 2])  # ration 1:1
 
-    # Legend
-    st.markdown(
-        """
-    **AQI Color Legend:**
-    - 🟢 **Green (0-50)**: Good
-    - 🟡 **Orange (51-100)**: Moderate
-    - 🔴 **Red (101-150)**: Unhealthy for Sensitive Groups
-    - 🟣 **Purple (151-200)**: Unhealthy
-    - ⚫ **Black (201+)**: Hazardous
-    """
-    )
+    with col1:
+        m = plot_station_map(df, target_datetime)
+        st_folium(m, width=700, height=900)
+
+    with col2:
+        st.markdown("### 📊 AQI Color Legend")
+        st.markdown(
+            """
+        <div style='font-size: 18px; line-height: 2.0;'>
+            🟢 <b>Good</b><br>
+            <span style='color: #D1D5DB; font-size: 14px;'>(0-50)</span>
+            <br><br>
+            🟡 <b>Moderate</b><br>
+            <span style='color: #D1D5DB; font-size: 14px;'>(51-100)</span>
+            <br><br>
+            🔴 <b>Unhealthy for Sensitive</b><br>
+            <span style='color: #D1D5DB; font-size: 14px;'>(101-150)</span>
+            <br><br>
+            🟣 <b>Unhealthy</b><br>
+            <span style='color: #D1D5DB; font-size: 14px;'>(151-200)</span>
+            <br><br>
+            ⚫ <b>Hazardous</b><br>
+            <span style='color: #D1D5DB; font-size: 14px;'>(201+)</span>
+        </div>
+        """,
+            unsafe_allow_html=True,
+        )
