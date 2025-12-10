@@ -1,9 +1,20 @@
-import pandas as pd
-import streamlit as st
-from streamlit_folium import st_folium
+import sys
+from pathlib import Path
 
-from src.app.backend import get_station_data, load_data, load_model, process_and_predict
-from src.visualization.map_plot import plot_station_map
+root_dir = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(root_dir))
+
+import pandas as pd  # noqa: E402
+import streamlit as st  # noqa: E402
+from streamlit_folium import st_folium  # noqa: E402
+
+from src.app.backend import (  # noqa: E402
+    get_station_data,
+    load_data,
+    load_model,
+    process_and_predict,
+)
+from src.visualization.map_plot import plot_station_map  # noqa: E402
 
 # === 1. Page Config ===
 st.set_page_config(
