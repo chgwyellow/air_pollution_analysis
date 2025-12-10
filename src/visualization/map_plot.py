@@ -27,25 +27,20 @@ def get_aqi_color(aqi):
 
 def plot_station_map(df: pd.DataFrame, target_date: pd.Timestamp) -> folium.map:
     """
-    Create a Folium map covered with Taiwan measurement station,
-    Color changed follows the AQI on target_date.
+    Create a Folium map showing Taiwan air quality stations.
+    Color-coded by AQI for the target date (daily data).
     """
 
     # Ensure the correct date format
     df["date"] = pd.to_datetime(df["date"])
 
-    # Find the closest data with target_date in hour unit
-    target_hour = target_date.floor("h")
-    daily_data = df[df["date"] == target_hour].copy()
+    # Filter data for the target date (daily data)
+    target_day = target_date.normalize()  # Remove time component
+    daily_data = df[df["date"] == target_day].copy()
 
-    # If the specific hour is out of data, trying to find the last data at the same day
+    # If no data found for exact date, show message
     if daily_data.empty:
-        target_day = target_date.floor("D")
-        daily_data = df[df["date"].dt.date == target_day].copy()
-
-        daily_data = daily_data.sort_values("date").drop_duplicates(
-            "sitename", keep="last"
-        )  # Preserve the last data
+        pass
 
     # Create the basic plot: Central point in Taiwan (23.7, 121.0)
     m = folium.Map(location=[23.6978, 120.9605], zoom_start=8, tiles="CartoDB positron")
@@ -61,7 +56,7 @@ def plot_station_map(df: pd.DataFrame, target_date: pd.Timestamp) -> folium.map:
         # Set popup content
         popup_html = f"""
         <b>測站:</b> {row["sitename"]}<br>
-        <b>時間:</b> {row["date"]}<br>
+        <b>日期:</b> {row["date"].strftime("%Y-%m-%d")}<br>
         <b>AQI:</b> {int(aqi_val) if not pd.isna(aqi_val) else "N/A"}<br>
         <b>PM2.5:</b> {row.get("pm2.5", "N/A")}<br>
         """

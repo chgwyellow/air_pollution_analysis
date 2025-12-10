@@ -2,16 +2,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_folium import st_folium
 
-from src.app.backend import (
-    get_station_data,
-    load_data,
-    load_lstm_model,
-    load_lstm_scaler,
-    load_model,
-    predict_lstm,
-    prepare_lstm_input,
-    process_and_predict,
-)
+from src.app.backend import get_station_data, load_data, load_model, process_and_predict
 from src.visualization.map_plot import plot_station_map
 
 # === 1. Page Config ===
@@ -28,7 +19,7 @@ if df.empty:
 
 # === 3. sidebar ===
 st.sidebar.title("🍃 Air Quality Time Machine")
-st.sidebar.markdown("Predict historical AQI using LightGBM or LSTM.")
+st.sidebar.markdown("Predict historical AQI using LightGBM model.")
 
 # === 3.0  App Mode Selection ===
 app_mode = st.sidebar.radio(
@@ -40,26 +31,12 @@ app_mode = st.sidebar.radio(
 # Prediction mode
 if app_mode == "🔮 Prediction (Time Machine)":
 
-    model_type = st.sidebar.radio(
-        "Select Model",
-        ["LightGBM (Tabular)", "LSTM (Time Series)"],
-        help="LightGBM uses tabular features. LSTM uses past 7 days sequence.",
-    )
-
     # === 3.1 Station Selection ===
-    all_stations = sorted(df["sitename"].unique())
-    lstm_stations = ["Zhongshan", "Xitun", "Zuoying", "Hualien"]
-
-    if model_type == "LSTM (Time Series)":
-        stations = [s for s in lstm_stations if s in all_stations]
-    else:
-        stations = all_stations
+    stations = sorted(df["sitename"].unique())
 
     default_index = 0
     if "Taoyuan" in stations:
         default_index = stations.index("Taoyuan")
-    elif "Zhongshan" in stations:
-        default_index = stations.index("Zhongshan")
 
     selected_station = st.sidebar.selectbox(
         "Select Station", stations, index=default_index
@@ -93,30 +70,10 @@ if app_mode == "🔮 Prediction (Time Machine)":
         else:
             # 4.3 Load Model & Predict
             prediction = None
-            model_name = "Model"
+            model = load_model()
 
-            if model_type == "LightGBM (Tabular)":
-                model = load_model()
-                if model:
-                    prediction = process_and_predict(input_data, model)
-                    model_name = "LightGBM"
-
-            elif model_type == "LSTM (Time Series)":
-                model = load_lstm_model(selected_station)
-                scaler = load_lstm_scaler(selected_station)
-
-                # Prepare input (needs scaler)
-                input_seq = prepare_lstm_input(
-                    df, selected_station, selected_date, scaler
-                )
-
-                if input_seq is None:
-                    st.warning(
-                        "⚠️ Not enough historical data (need 30+ days buffer) for LSTM."
-                    )
-                else:
-                    prediction = predict_lstm(model, input_seq, scaler)
-                    model_name = "LSTM"
+            if model:
+                prediction = process_and_predict(input_data, model)
 
             # === 5. Display Result ===
             if prediction is not None:
@@ -127,7 +84,7 @@ if app_mode == "🔮 Prediction (Time Machine)":
                     st.metric(
                         label="Predicted AQI",
                         value=f"{prediction:.2f}",
-                        delta=f"{model_name} Model",
+                        delta="LightGBM Model",
                     )
 
                 # Show the actual value if we have, comparing the accuracy
@@ -168,20 +125,12 @@ elif app_mode == "🗺️ Geo-spatial Map":
         max_value=max_date,
     )
 
-    # Hour Slider
-    selected_hour = st.sidebar.slider(
-        "Select Hour",
-        min_value=0,
-        max_value=23,
-        value=12,  # default the slider ticks on 12
-    )
-
     # Combine Date and Hour
-    target_datetime = pd.to_datetime(f"{selected_date} {selected_hour}:00:00")
+    target_datetime = pd.to_datetime(f"{selected_date}")
 
     # Display Map
     st.title("🗺️ Taiwan Air Quality Map")
-    st.markdown(f"### 📅 Showing Data for: **{target_datetime}**")
+    st.markdown(f"### 📅 Showing Data for: **{selected_date}**")
 
     m = plot_station_map(df, target_datetime)
     st_folium(m, width=700, height=900)
