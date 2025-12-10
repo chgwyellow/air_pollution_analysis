@@ -8,6 +8,10 @@
 
 Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • Docker • Dev Container
 
+## 🌐 [Live Demo](https://chgwyellow-taiwan-air-quality-prediction.streamlit.app/) 
+
+> **Try it now!** Predict historical AQI for any Taiwan station using our deployed LightGBM model.
+
 <p align="center">
   <!-- Environment / Tooling -->
   <img src="https://img.shields.io/badge/Python-3.13-blue?logo=python&logoColor=white" />
@@ -17,6 +21,7 @@ Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • D
   <img src="https://img.shields.io/badge/Jupyter-Supported-f37726?logo=jupyter" />
   <img src="https://img.shields.io/badge/Scikit--Learn-1.7+-F7931E?logo=scikitlearn&logoColor=white" />
   <img src="https://img.shields.io/badge/Explainability-SHAP-ff69b4" />
+  <img src="https://img.shields.io/badge/Streamlit-Cloud-FF4B4B?logo=streamlit&logoColor=white" />
   <img src="https://img.shields.io/badge/License-MIT-green" />
 
   <!-- Repo Info -->
@@ -66,6 +71,8 @@ This project provides a full machine-learning workflow to analyze Taiwan’s air
 ✔ Evaluation & visualization
 
 ✔ Reproducible environment via Docker + Dev Container
+
+✔ **[Live Web App](https://chgwyellow-taiwan-air-quality-prediction.streamlit.app/)** deployed on Streamlit Cloud
 
 ## 📂 Data Source
 
