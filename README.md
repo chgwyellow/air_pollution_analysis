@@ -8,7 +8,7 @@
 
 Data Cleaning • Feature Engineering • Modeling • SHAP • Evaluation • Docker • Dev Container
 
-## 🌐 [Live Demo](https://chgwyellow-taiwan-air-quality-prediction.streamlit.app/) 
+## 🌐 [Live Demo](https://chgwyellow-taiwan-air-quality-prediction.streamlit.app/)
 
 > **Try it now!** Predict historical AQI for any Taiwan station using our deployed LightGBM model.
 
@@ -471,6 +471,22 @@ The project includes a **Streamlit-based Web App** that serves as a "Time Machin
 ```bash
 streamlit run src/app/app.py
 ```
+
+### **📸 Application Screenshots**
+
+<div align="center">
+
+#### 🔮 Prediction Mode
+
+<img src="docs/screenshots/prediction_mode.png" width="85%" alt="Prediction Mode">
+<p><i>Interactive prediction interface with real-time AQI forecasting and 7-day trend analysis</i></p>
+<br>
+
+#### 🗺️ Geo-spatial Map
+
+<img src="docs/screenshots/map_mode.png" width="85%" alt="Map Mode">
+<p><i>Taiwan-wide air quality visualization with color-coded station markers</i></p>
+</div>
 
 ---
 

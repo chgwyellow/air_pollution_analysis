@@ -222,3 +222,5 @@ emoji.txt
 !/models/feature_names.pkl
 !/models/lgbm/*.pkl
 !/models/lstm/*
+
+docs/*
