@@ -217,5 +217,8 @@ emoji.txt
 *.joblib
 *.keras
 
+# Allow essential model files for deployment
+!/models/standard_scaler.pkl
+!/models/feature_names.pkl
 !/models/lgbm/*.pkl
 !/models/lstm/*
